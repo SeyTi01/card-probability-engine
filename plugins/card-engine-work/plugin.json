@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "card-engine-work",
+  "version": "1.0.0",
+  "description": "Focused development and package-release workflows for CardProbability.Engine.",
+  "author": {
+    "name": "SeyTi01"
+  },
+  "repository": "https://github.com/SeyTi01/card-probability-engine",
+  "keywords": [
+    "dotnet",
+    "probability",
+    "nuget",
+    "development"
+  ],
+  "extensions": {
+    "com.openai": {
+      "apps": "./.app.json",
+      "interface": {
+        "displayName": "Card Engine Work",
+        "shortDescription": "Probability engine development",
+        "longDescription": "Plan, implement, diagnose, verify and review CardProbability.Engine changes; inspect real NuGet packages; create issues and PRs; rebase task branches; and release verified artifacts. Concrete task routes load shared rules and only the applicable model, API, package and host-integration procedures.",
+        "developerName": "SeyTi01",
+        "category": "Developer Tools",
+        "capabilities": [],
+        "logo": "./assets/icon.svg",
+        "composerIcon": "./assets/icon.svg",
+        "defaultPrompt": "Use the appropriate Card Engine Work skill for this repository task."
+      }
+    }
+  }
+}
