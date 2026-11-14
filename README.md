@@ -20,11 +20,18 @@ A ten-copy deck contains two lanterns and eight stones. A seven-copy hand contai
 using CardProbability;
 
 CalculationRequest request = new(
-    entries: [new DeckEntry("lantern", 2), new DeckEntry("stone", 8)],
+    entries: [
+        new DeckEntry("lantern", 2),
+        new DeckEntry("stone", 8)
+    ],
     handSize: 7,
-    goals: [new Goal("light", [Requirement.OfEntry("lantern")])]
+    goals: [
+        new Goal("light", [Requirement.OfEntry("lantern")])
+    ]
 );
+
 CalculationResult result = CalculationEngine.Calculate(request, new(CalculationMode.OpeningHand));
+
 if (result.Status != CalculationStatus.Completed) {
     throw new InvalidOperationException(result.Detail);
 }
@@ -57,7 +64,9 @@ node scripts/validate.mjs
 
 Validation runs the neutral tests and samples, packs Release artifacts, checks package metadata and Source Link, and runs public consumers restored from the actual package into a fresh isolated cache. See [contributing and releases](https://github.com/SeyTi01/card-probability-engine/blob/main/docs/contributing.md).
 
-The source was extracted from the [YGO calculator](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web) under its MIT license. [Provenance](https://github.com/SeyTi01/card-probability-engine/blob/main/docs/provenance.md) records the exact transfer revision and complete source inventory. Package versions and runtime `ModelVersion` are separate contracts.
+The [YGO calculator](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web) is the engine's original project and serves as its pilot application. [Provenance](https://github.com/SeyTi01/card-probability-engine/blob/main/docs/provenance.md) records the original revision and source inventory.
+
+Package versions and runtime `ModelVersion` are separate contracts.
 
 ## License
 
