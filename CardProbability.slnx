@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CardProbability/CardProbability.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CardProbability.EngineTests/CardProbability.EngineTests.csproj" />
+    <Project Path="tests/PackageInspection/PackageInspection.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/BasicCalculation/BasicCalculation.csproj" />
+    <Project Path="samples/SupportedEffects/SupportedEffects.csproj" />
+  </Folder>
+</Solution>

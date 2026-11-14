@@ -1,0 +1,87 @@
+name: Publish verified package
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: Successful manual Validate package workflow run ID
+        required: true
+        type: string
+      version:
+        description: Exact candidate version, with existing vVERSION tag
+        required: true
+        type: string
+      source_commit:
+        description: Full source commit from the candidate manifest
+        required: true
+        type: string
+      package_sha256:
+        description: SHA256 of the exact nupkg used in the calculator rehearsal
+        required: true
+        type: string
+      rehearsal_url:
+        description: Public GitHub record of native and production worker rehearsal
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nuget-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: nuget
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+      PACKAGE_VERSION: ${{ inputs.version }}
+      SOURCE_COMMIT: ${{ inputs.source_commit }}
+      PACKAGE_SHA256: ${{ inputs.package_sha256 }}
+      REHEARSAL_URL: ${{ inputs.rehearsal_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_commit }}
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Check candidate provenance and release tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/verify-release-request.mjs
+      - name: Download the verified candidate without rebuilding
+        uses: actions/download-artifact@v8
+        with:
+          name: package-${{ inputs.version }}
+          path: artifacts
+          run-id: ${{ inputs.candidate_run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify exact package and symbol hashes and isolated consumption
+        run: node scripts/verify-artifact.mjs artifacts "$PACKAGE_VERSION" "$SOURCE_COMMIT" "$PACKAGE_SHA256"
+      - name: Get short-lived NuGet publishing credential
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: SeyTi
+      - name: Publish the verified package
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push "artifacts/CardProbability.Engine.$PACKAGE_VERSION.nupkg" --no-symbols --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json
+      - name: Publish the matching symbols
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: dotnet nuget push "artifacts/CardProbability.Engine.$PACKAGE_VERSION.snupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json

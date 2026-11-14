@@ -1,0 +1,740 @@
+{
+  "calculatorRepository": "https://github.com/SeyTi01/ygo-advanced-probability-calculator-web",
+  "calculatorCommit": "8d1d7b41086c8bc36b8248bfb5003d70ebd35793",
+  "hashAlgorithm": "SHA256",
+  "files": [
+    {
+      "source": "CardProbability.EngineTests/AlternativeReductionBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/AlternativeReductionBoundaryTest.cs",
+      "sourceSha256": "f1aaaa467770653855c97a82ae955c23d2f9a0ab1c1b8f31b0049e14237db42b",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/CalculationBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/CalculationBoundaryTest.cs",
+      "sourceSha256": "05393c5a72267dda7c3b2cc94ac8312ec3a4d1c2c4dced2b9bbaa65c5dcf9894",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/CalculationStoragePolicyTest.cs",
+      "destination": "tests/CardProbability.EngineTests/CalculationStoragePolicyTest.cs",
+      "sourceSha256": "4058e83685eb3001ec25c0f2652b334eff5c781dd7b5fbb1e31cad048087a617",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/CapabilityProofTest.cs",
+      "destination": "tests/CardProbability.EngineTests/CapabilityProofTest.cs",
+      "sourceSha256": "3eef156c69c10ec0d7224c478f7bb09f070abe524cb971b65488052c158865ab",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/CardProbability.EngineTests.csproj",
+      "destination": "tests/CardProbability.EngineTests/CardProbability.EngineTests.csproj",
+      "sourceSha256": "1afc8eb605565329df9e2338187fc94e6fc0616effc7de25d08b01b1ab94b4f6",
+      "transfer": "project reference and standalone build wiring adapted"
+    },
+    {
+      "source": "CardProbability.EngineTests/CertificationBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/CertificationBoundaryTest.cs",
+      "sourceSha256": "d3f236f153dc6639ea7548a56a0071b756f31d18d5beba5c36c12b9850c0effe",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/CountingBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/CountingBoundaryTest.cs",
+      "sourceSha256": "531b7fd8e9c474b9f505e93beaf956d54c830e74be694ed7ccf4a06c00dc8142",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/DrawAssessmentNeutralTest.cs",
+      "destination": "tests/CardProbability.EngineTests/DrawAssessmentNeutralTest.cs",
+      "sourceSha256": "4ee26f23b0105714a4292ecd72a2472ffa85a19ee7c05cda803012a3c8953d74",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/Data/exchangeable-removal.json",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/Data/exchangeable-removal.json",
+      "sourceSha256": "526fc7fdf7598f32b9bf0f40018914ea01069390f47fcf1da088c36684b7284e",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/Data/hidden-deck-cost.json",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/Data/hidden-deck-cost.json",
+      "sourceSha256": "ccae39d73b9b0b136488db3e69325eb7069cbe971c55b5d9388cd02629276e41",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/Data/hidden-deck-mill.json",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/Data/hidden-deck-mill.json",
+      "sourceSha256": "bfde2484e045a043260efabbb32cd421043bc27165b876c088d086369e8ac1c9",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/Data/mixed-cost-pressure.json",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/Data/mixed-cost-pressure.json",
+      "sourceSha256": "b009e5a6208223983c4698eb14242307faa166dec028411e92f3939b00db81ef",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/DrawSequenceOracle.cs",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/DrawSequenceOracle.cs",
+      "sourceSha256": "4d171730d58a7fdbdf1e9e8f01f0b3188e60d5ca1359bf890941253fea8f5926",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/EngineCase.cs",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/EngineCase.cs",
+      "sourceSha256": "a79cca17ce32412fceb57d49ebe0e00448c2a6b0e2ad5ad795d5262775c06830",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/NeutralPressureFixtures.cs",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/NeutralPressureFixtures.cs",
+      "sourceSha256": "e0ba3fb0dcd614c58df182eff65ee4b80c9b6379d01f2c49567f0838584a9ac7",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/SearchCertificateFixtures.cs",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/SearchCertificateFixtures.cs",
+      "sourceSha256": "77ca257187447778057259c34351e2ca54092af5c8b75c9f384e39dc9ce91355",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Fixtures/SearchCertificateOracle.cs",
+      "destination": "tests/CardProbability.EngineTests/Fixtures/SearchCertificateOracle.cs",
+      "sourceSha256": "18ce6877f8bae2323f2bd3f38536c25587185a56032b40fbd597a31cebdc0465",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/AdaptiveAndMultipleCopyRegressionTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/AdaptiveAndMultipleCopyRegressionTest.cs",
+      "sourceSha256": "f110dccedae09df4d125d5c9311c738211ad04d5659a790f4f289c082a506e36",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/DeferredPressureTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/DeferredPressureTest.cs",
+      "sourceSha256": "2f2842b744e35ce892ecb5e62e69382421e6bec8f4bece581ec403df4bd4394b",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/DeferredTestCases.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/DeferredTestCases.cs",
+      "sourceSha256": "4e3ca4dd37e06ee4c34b2f4333e9ff5b1caa89955b053aef4d6f9010450e37fe",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/DrawCountStateRegressionTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/DrawCountStateRegressionTest.cs",
+      "sourceSha256": "51b5dfbb74a2edd30f72a0e9a34f3eda1538864fe544da0215040a22d64d8b5f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/DrawResourceBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/DrawResourceBoundaryTest.cs",
+      "sourceSha256": "21f1abc3039a3f16cb8f229087a51a2069af3fb27f9e27239384ade8c9f20f99",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/KnownLossRefinementRegressionTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/KnownLossRefinementRegressionTest.cs",
+      "sourceSha256": "312201259d0f04b4eae7559c84b5c4464cde2dc2b52700745bc15ef1917ecf93",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/MixedDeferredStructureTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/MixedDeferredStructureTest.cs",
+      "sourceSha256": "77a37f550af458c35d8b0711476a7e7246cd8bb0283dd743dafee67867c82ea2",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/OrderedPressureRegressionTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/OrderedPressureRegressionTest.cs",
+      "sourceSha256": "60b24a39c47ead8c7197bb3da7e16ce45ccc5f610389e3d68ee94c3363981775",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PhysicalEnumerationTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PhysicalEnumerationTest.cs",
+      "sourceSha256": "e77534481457409bc67dbea13208f2bfd540506207c4a7f18e097e9376e17149",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PhysicalPoolingTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PhysicalPoolingTest.cs",
+      "sourceSha256": "a1feac86f05477b98421026067a8614f068d1c5dff69d3d8769e20f1f9c7c9b5",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PhysicalPredicateTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PhysicalPredicateTest.cs",
+      "sourceSha256": "62b5c99ba113b302f0937af75b4d2dbb4980e9ec3bef520e653c3cc7c59af3c4",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PhysicalRoutingTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PhysicalRoutingTest.cs",
+      "sourceSha256": "456e9e67ad682993d65409037e543ebba9848d52f7b4024aa0424fbada83b0d9",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PhysicalSearchLossCounterTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PhysicalSearchLossCounterTest.cs",
+      "sourceSha256": "8c6a8db40d4c7f9c6914ac6dd0dcfceea334f310ee7ab514c777abf54db97fd8",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PostDrawDeferredTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PostDrawDeferredTest.cs",
+      "sourceSha256": "6856f1b48e3035f3ac5a89a839ddcce8b4ab94c81d3f95a4904e7a950dd4db64",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PostDrawExchangeableTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PostDrawExchangeableTest.cs",
+      "sourceSha256": "3aa6f9cc53aa4a7935541425a19c6eaa43f0cb335a216113b83f5643c5b89159",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PreDrawDeferredTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PreDrawDeferredTest.cs",
+      "sourceSha256": "d8062b19fa7eb9c28740d0bde6ba1bfbf61332b9f5e3143be4a560e31e9326fd",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/PressureRepresentationTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/PressureRepresentationTest.cs",
+      "sourceSha256": "11bb6ea5848555a274fef5fb7025f8f1d2be0db6a9fd4e259a6e872e3440dff8",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/SearcherDeferralTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/SearcherDeferralTest.cs",
+      "sourceSha256": "de17325c2605f632f0aa5cc155c57ee63b27532b47de8c52b44371b02b47ee4f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/SelectiveSurvivorTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/SelectiveSurvivorTest.cs",
+      "sourceSha256": "8ea9aa004061ac93b84f2d1debab4d66f3ad23f308a7bd3648c423c7a4c19adb",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/StreamedOrderedSearchTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/StreamedOrderedSearchTest.cs",
+      "sourceSha256": "a30215600f0df99ef8c1a6129c74465b7282ed6d9611aff8da0c7ba4922e2480",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/Optimizations/TargetSurvivalRefinementRegressionTest.cs",
+      "destination": "tests/CardProbability.EngineTests/Optimizations/TargetSurvivalRefinementRegressionTest.cs",
+      "sourceSha256": "55a802af0e28417b9503b0a10b7098d752b2c55ae4c266fc2cd4174f2947df6d",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/OrderedAggregationNeutralTest.cs",
+      "destination": "tests/CardProbability.EngineTests/OrderedAggregationNeutralTest.cs",
+      "sourceSha256": "cc46a5ed8a0e659c3341818d468f4a9607b5e83d652cef5f926b2b65332cc2fa",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/OrderedPackingTest.cs",
+      "destination": "tests/CardProbability.EngineTests/OrderedPackingTest.cs",
+      "sourceSha256": "15f7b02eaa2776fa3dabdc465a2d799721bd2cfd036dd0eafd23d8f53e67e68c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/OrderedThroughputProfile.cs",
+      "destination": "tests/CardProbability.EngineTests/OrderedThroughputProfile.cs",
+      "sourceSha256": "a61117e5351b85edb48030e4b029e16c25f35270ce544bcaef3536f5680a83e5",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/SearchDecisionCounterTest.cs",
+      "destination": "tests/CardProbability.EngineTests/SearchDecisionCounterTest.cs",
+      "sourceSha256": "4a2198f971f7a2c97243cbbdaaa5e8dfd3e61e483baccb420e23923f84cc042c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/SearchPoolBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/SearchPoolBoundaryTest.cs",
+      "sourceSha256": "d923f98038802ecb3556f427fd646f4eef8fc59190c6848522781cf95e296d56",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/SelectorPayloadBoundaryTest.cs",
+      "destination": "tests/CardProbability.EngineTests/SelectorPayloadBoundaryTest.cs",
+      "sourceSha256": "998d8e761b6dfe4cb40d9e6e883dcb413f86105f137055de171c5921ebd9275c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/SingleEntryDrawProofTest.cs",
+      "destination": "tests/CardProbability.EngineTests/SingleEntryDrawProofTest.cs",
+      "sourceSha256": "2fdd46cf0a8ed69d13ae439878cfde1e021a1c10f82763fdaa40f30bf563911e",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/StorageCacheTest.cs",
+      "destination": "tests/CardProbability.EngineTests/StorageCacheTest.cs",
+      "sourceSha256": "b34c4e8471540885978c2fe25d65ba600cb5eb20faa3d29857b47fe1a2617d30",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/StorageTierProfile.cs",
+      "destination": "tests/CardProbability.EngineTests/StorageTierProfile.cs",
+      "sourceSha256": "ea34ee880f81813e6dd4af6900d3b6e6be0861b5e8cb39ba5331a34c4fbc563c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/TargetSurvivalBudgetTest.cs",
+      "destination": "tests/CardProbability.EngineTests/TargetSurvivalBudgetTest.cs",
+      "sourceSha256": "81617b7f520644957b79014a5bead7f81d57dfd8cf75f10f3058870733996a35",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "CardProbability.EngineTests/UnlimitedWorkPolicyTest.cs",
+      "destination": "tests/CardProbability.EngineTests/UnlimitedWorkPolicyTest.cs",
+      "sourceSha256": "70b744b102e39f3d9e4fc6101953f0a67fd35f89f76fabbdbc608d2a18bd8204",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/CalculationContracts.cs",
+      "destination": "src/CardProbability/CalculationContracts.cs",
+      "sourceSha256": "cc86545fb2249ea4e4962e95930433bb2952033ae9daacc177c5f3edb7b7aff7",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/CalculationEngine.cs",
+      "destination": "src/CardProbability/CalculationEngine.cs",
+      "sourceSha256": "d2dd53f93e3d6ea3815b1a140c78371f28d467260e27f7e83bed007cd2f2a9b4",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/CalculationRequest.cs",
+      "destination": "src/CardProbability/CalculationRequest.cs",
+      "sourceSha256": "bf60286d417e9026075ba2d76e2c9c341d46c5edd336e1dbd97694941462957c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/EngineTestVisibility.cs",
+      "destination": "src/CardProbability/EngineTestVisibility.cs",
+      "sourceSha256": "9f5f3fcc3bb0d7bdcfe001ec417f4300a0352af78d9778404e696e4c24d0f447",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/CalculationResultRows.cs",
+      "destination": "src/CardProbability/Internal/CalculationResultRows.cs",
+      "sourceSha256": "9fe322cec85a4d2b96db3f3f5054786996ef40efce95cc042b02677b90edd25f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/CalculationRuntime.cs",
+      "destination": "src/CardProbability/Internal/CalculationRuntime.cs",
+      "sourceSha256": "bb97914f8b5b93e5b1781b5cd8a1d7451df628ab5649d85190d13c3cb08034eb",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Certification/CalculationCapability.cs",
+      "destination": "src/CardProbability/Internal/Certification/CalculationCapability.cs",
+      "sourceSha256": "95c45f6453769ab214ec8b87bd91864afcb4c5e353644addd89fef0a080e963b",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Certification/SearchAvailabilityCertification.cs",
+      "destination": "src/CardProbability/Internal/Certification/SearchAvailabilityCertification.cs",
+      "sourceSha256": "ee45a3bdf9badd7b019364e21a02c92db933f3944cbefb1c04b6c16025c525fd",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Compilation/CardSelectorCompiler.cs",
+      "destination": "src/CardProbability/Internal/Compilation/CardSelectorCompiler.cs",
+      "sourceSha256": "95cca9173757fdcf7d68b9aba96d430f9eb976991889eda002f75fa6d86a8878",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Compilation/ComboAlternativeReducer.cs",
+      "destination": "src/CardProbability/Internal/Compilation/ComboAlternativeReducer.cs",
+      "sourceSha256": "384abacddad036be57d06b1e2dce7acd3e37590da1e2b8e7c0e6999849daeba6",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Compilation/ComboEventCompiler.cs",
+      "destination": "src/CardProbability/Internal/Compilation/ComboEventCompiler.cs",
+      "sourceSha256": "cfc2fb34ebfabe4d0c00e83d0d8de35da0d6ae9d1013493d01933a047a4eb085",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Compilation/CompiledEvent.cs",
+      "destination": "src/CardProbability/Internal/Compilation/CompiledEvent.cs",
+      "sourceSha256": "00a9eabe72bc43e6f2926230f5e906238b0d9866cbfbe1d8138abe22970dedb3",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/CalculationOptions.cs",
+      "destination": "src/CardProbability/Internal/Contracts/CalculationOptions.cs",
+      "sourceSha256": "e96409830dc2a0cbcb2e1c45ee916e5fd6c9fa737b91ed1802ecd970cb300356",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/CalculationResultContract.cs",
+      "destination": "src/CardProbability/Internal/Contracts/CalculationResultContract.cs",
+      "sourceSha256": "71dc84073c160ccc1a0c2b4275c2a890b59738d2798b65f54a43375ce64e9e9b",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/CalculationStoragePolicy.cs",
+      "destination": "src/CardProbability/Internal/Contracts/CalculationStoragePolicy.cs",
+      "sourceSha256": "7011a52770072f5eaf93f649eaef43faf696cd23430040d686b80c1af8498c50",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/CalculationWorkPolicy.cs",
+      "destination": "src/CardProbability/Internal/Contracts/CalculationWorkPolicy.cs",
+      "sourceSha256": "22bead83723aca97fadc042a23305c402e41db8eab5c5afe22945ca1db9f321f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/ProbabilityCalculationLimitException.cs",
+      "destination": "src/CardProbability/Internal/Contracts/ProbabilityCalculationLimitException.cs",
+      "sourceSha256": "23a39c566a2fadc6571d70b6478fe4e09cac909ce3f13fe092737615a7dcf072",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/ProbabilityCalculationResult.cs",
+      "destination": "src/CardProbability/Internal/Contracts/ProbabilityCalculationResult.cs",
+      "sourceSha256": "1b53c6661009c8212f058bb2c07fac44c8395eebbb4480beac312e7dbbc6acce",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Contracts/SearchAvailabilityCertificate.cs",
+      "destination": "src/CardProbability/Internal/Contracts/SearchAvailabilityCertificate.cs",
+      "sourceSha256": "f7c38dfa14a2ab762bfcd741e99da2ee8fbd193c3edfca6c5bd932d6134dd71f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/BoundedSearchHandCounter.cs",
+      "destination": "src/CardProbability/Internal/Counting/BoundedSearchHandCounter.cs",
+      "sourceSha256": "af12b2d3b87735224d325bbc46ba59e612e2e1b8af48db716e80a2ee45bc24a2",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/EventUnionEvaluator.cs",
+      "destination": "src/CardProbability/Internal/Counting/EventUnionEvaluator.cs",
+      "sourceSha256": "5f9e2caf75065baa125ac27e4605075beeda5f3fceee1abe13a1fe5fb18040c5",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/ExactHandCounter.cs",
+      "destination": "src/CardProbability/Internal/Counting/ExactHandCounter.cs",
+      "sourceSha256": "9b5ac72d7a22ea69cc2f2aa2ec344c4d9366ab1c52cc86ec1896522cd3b9937e",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/ExactProbability.cs",
+      "destination": "src/CardProbability/Internal/Counting/ExactProbability.cs",
+      "sourceSha256": "c925d2aec5a07d3ec9af17ba5fec62c8e1b0c4c63ca7f2486d1d0ce8ede2e75c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/ExcavationHandCounter.cs",
+      "destination": "src/CardProbability/Internal/Counting/ExcavationHandCounter.cs",
+      "sourceSha256": "3f810c37d4951c335f499a11307d843cd283516ac8c6dacef7451b81bcf0a2df",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/PhysicalSearchHandCounter.cs",
+      "destination": "src/CardProbability/Internal/Counting/PhysicalSearchHandCounter.cs",
+      "sourceSha256": "b27f79a11b7084166d627e67eb846937b7370df584f60ffc3077763169544147",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Counting/ProbabilityRatio.cs",
+      "destination": "src/CardProbability/Internal/Counting/ProbabilityRatio.cs",
+      "sourceSha256": "6176af479ac3d51a5fc1054c4e9f77ba0dcbd2f3a0fdce01ee57e948df02df79",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawEffectCalculation.cs",
+      "destination": "src/CardProbability/Internal/DrawEffectCalculation.cs",
+      "sourceSha256": "2b002b7c24c44027fa99245d0d13ccac8faa6e17815c5cdfa885abdc4bc96cc8",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawEffectFeasibility.cs",
+      "destination": "src/CardProbability/Internal/DrawEffectFeasibility.cs",
+      "sourceSha256": "4d670986bfe74a5c82590a966b43898fb18f4bd46c1d4ecc8f58d21321825a6d",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawEffectResolver.cs",
+      "destination": "src/CardProbability/Internal/DrawEffectResolver.cs",
+      "sourceSha256": "7df4c4b05d7084f166eb7e37828a2f8a99f0083b8b030da92a4f457d832c8aed",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawExecutionAssessment.cs",
+      "destination": "src/CardProbability/Internal/DrawExecutionAssessment.cs",
+      "sourceSha256": "d10faeb283b4691bffa79e316326f4a3a44b2a8f2255f320923f8b372e499e89",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/DrawFrontierPacking.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/DrawFrontierPacking.cs",
+      "sourceSha256": "3947a32d415f2adf11d78c4f377f31edd3508b3b42273e72ed5dbd5dbfbbe1d2",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/DrawResolution.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/DrawResolution.cs",
+      "sourceSha256": "5f31ac3ac0b872276f5dfe000827eaed6bd77b41bc7fddecbf3622bb53da640b",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/OrderedDrawStateLayout.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/OrderedDrawStateLayout.cs",
+      "sourceSha256": "a8a7e8ef0166be21e65243b5c6ba4b2297e3235cb1ec7546f3d24373950bc140",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawBatchEnumeration.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawBatchEnumeration.cs",
+      "sourceSha256": "b8c4c13e5a72dea598e2f6e89f00aa9e918ecd95f0dcd7380d6fb6cb017358d9",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawCalculation.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawCalculation.cs",
+      "sourceSha256": "bd567646bd626bce346f052b80a7d32bdffbae874440bc1e1d4c836b278500ed",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawDeferredCalculation.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawDeferredCalculation.cs",
+      "sourceSha256": "0ecacb9f7503cd5a742788486f0e72126c089d77f87bb5ab2fe917572f673783",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawExchangeableCalculation.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawExchangeableCalculation.cs",
+      "sourceSha256": "ca7862a420f5ca851e5357f0dd02e08fefaa490342a885bcc52c60c65a271561",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawOrderedResolver.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawOrderedResolver.cs",
+      "sourceSha256": "d3f4bb3dd659fabd2ecb6af82fb15d49fb157fffc22267fdcbba01acd33585a4",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawPhysicalEnumeration.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawPhysicalEnumeration.cs",
+      "sourceSha256": "a5354f013f7340849a6a99eccf3d5e2fd1ad753d89dbc1894ca7f11378a6270d",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawPreparation.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawPreparation.cs",
+      "sourceSha256": "ddf53114c62429639998eeefba9c53f581bd8f15a9ef3c417f98bc46daf3e9e4",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawSearchCalculation.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawSearchCalculation.cs",
+      "sourceSha256": "07de52298d396f37af9193ed627eb688b5d3eb88bb151b80af6f6d05eaecc4ef",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawSearchKeepPolicy.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawSearchKeepPolicy.cs",
+      "sourceSha256": "4ea7978e1bb63973b985aec2aafc1e9a7ab6008aa75a5a5260809f3a2c292b6c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawSelectiveSurvivors.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawSelectiveSurvivors.cs",
+      "sourceSha256": "75894bb6049ffe6acba2dc783da012afc61b90434dd47fac42d1843117a566be",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawSingleSourceEnumeration.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawSingleSourceEnumeration.cs",
+      "sourceSha256": "9396663127884040774ce635913bd3bbc13e7af62f55834dde60334abe05b585",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawStreamedSearch.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawStreamedSearch.cs",
+      "sourceSha256": "7ca6e040552f4b2ee73c024bf0bebe61122a9de16ba29da9246765246ab3573a",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/PostDrawTerminalCalculation.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/PostDrawTerminalCalculation.cs",
+      "sourceSha256": "d52e726ef8b27a4c0668400c0dfa228f8c7c22d2f46fde40c301aae512c9774f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/DrawResolution/ScenarioConditioner.cs",
+      "destination": "src/CardProbability/Internal/DrawResolution/ScenarioConditioner.cs",
+      "sourceSha256": "0383a4f38dc891272764ba3f814a5e9fceac4bdcf5f9cb4b9ac0f115ab622cd3",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/ExactCalculationResult.cs",
+      "destination": "src/CardProbability/Internal/ExactCalculationResult.cs",
+      "sourceSha256": "f8dd8d4fb63828d6154aefd4e64b9d24c2667f0db9cfcbce9e3b0397fba2e5c6",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/CalculationModel.cs",
+      "destination": "src/CardProbability/Internal/Model/CalculationModel.cs",
+      "sourceSha256": "57ea2cad7a83793864283dc7bd2be63d82e33a1f9b0ea730da7310988b47c60f",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/CalculationModelTypes.cs",
+      "destination": "src/CardProbability/Internal/Model/CalculationModelTypes.cs",
+      "sourceSha256": "5ffb5c3b34fbeaacd5b75a54f01e510849a537d95a51590fc10c7b3f6c0323d1",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/ComboAlternativeGroup.cs",
+      "destination": "src/CardProbability/Internal/Model/ComboAlternativeGroup.cs",
+      "sourceSha256": "d621a7d0ddb8e62a6b3532d0b7e7f3b8b4ed6e1ed8ff3bacc0a0b4f156a2b254",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/ComboCard.cs",
+      "destination": "src/CardProbability/Internal/Model/ComboCard.cs",
+      "sourceSha256": "88dc350bf46c57059dd8529e433e0be6362d392b0c62b169ee30ad181da2e43c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/DrawActivationPriority.cs",
+      "destination": "src/CardProbability/Internal/Model/DrawActivationPriority.cs",
+      "sourceSha256": "e0e7d37f6a7e89704c41b355b7a698ed74a01ae5647402796637001c9c9456b0",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/DrawEffectPlan.cs",
+      "destination": "src/CardProbability/Internal/Model/DrawEffectPlan.cs",
+      "sourceSha256": "ed48b43561ef9e51530870dba32a896b5e7902e2fe4875ee6fddf380e6ed821c",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/ExcavationEffectPlan.cs",
+      "destination": "src/CardProbability/Internal/Model/ExcavationEffectPlan.cs",
+      "sourceSha256": "1095da1a9a1f976b2db2b1995bdd0f21d96217e48d81d4c4dd8317b5f4724c06",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/PostDrawFailureBehavior.cs",
+      "destination": "src/CardProbability/Internal/Model/PostDrawFailureBehavior.cs",
+      "sourceSha256": "d9344ebf54b145d85ada9f7072fc0417e2db2708f28e9a83a724cce622fbfc70",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/RequirementMaximumMode.cs",
+      "destination": "src/CardProbability/Internal/Model/RequirementMaximumMode.cs",
+      "sourceSha256": "f21b33e06fb469fd2f104e41d9c95d8e529a7342d881c542b6bd820301caf9be",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Model/SearchEffectPlan.cs",
+      "destination": "src/CardProbability/Internal/Model/SearchEffectPlan.cs",
+      "sourceSha256": "771e2455f903a0c4278264af8d3d8f76928e08eef7ebca703dde9e1294b736f6",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/PreparedCalculation.cs",
+      "destination": "src/CardProbability/Internal/PreparedCalculation.cs",
+      "sourceSha256": "1d7121d2c273750c411c5ada078f8469ac9df1bf0296aca6cca34d2a6df32ca3",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/ProbabilityCalculation.cs",
+      "destination": "src/CardProbability/Internal/ProbabilityCalculation.cs",
+      "sourceSha256": "8407a8cefebeedd75dccd8ee27c9ce8d2e0f6d312c4dea4afaba7fbaf5b560c1",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Resources/CountStateLossBudget.cs",
+      "destination": "src/CardProbability/Internal/Resources/CountStateLossBudget.cs",
+      "sourceSha256": "931c2a71ca877a6f8b3def2e882733b6916b1cb3bfab4806eeeb331fc5e5add7",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Resources/WorkBudget.cs",
+      "destination": "src/CardProbability/Internal/Resources/WorkBudget.cs",
+      "sourceSha256": "0e21787bbe6aa84876cd963cfe2bb0516d5bdf435c1894978f05e77f6dfad5fe",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/FastPhysicalRoute.cs",
+      "destination": "src/CardProbability/Internal/Search/FastPhysicalRoute.cs",
+      "sourceSha256": "08e23e20cff611b84cae3717a939a9bc05ee67347ed2adacfc88c1ad920c4c10",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/OrderedSearchLossBudget.cs",
+      "destination": "src/CardProbability/Internal/Search/OrderedSearchLossBudget.cs",
+      "sourceSha256": "07aade99ff70d40024b0b5013cbca440c0e208a8b34611735659fbfb96b95f58",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/PhysicalSearchCalculation.cs",
+      "destination": "src/CardProbability/Internal/Search/PhysicalSearchCalculation.cs",
+      "sourceSha256": "235765f4b9e9b285f07c8cc17d83cfc2e497c55d3373cd6d875a2ab4fe483035",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/PhysicalSearchLossCounter.cs",
+      "destination": "src/CardProbability/Internal/Search/PhysicalSearchLossCounter.cs",
+      "sourceSha256": "51fe1371cbecb5d64bbbec382d6c1af99cea5588120276e93c551af2e89b794b",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/SearchAccessCalculation.cs",
+      "destination": "src/CardProbability/Internal/Search/SearchAccessCalculation.cs",
+      "sourceSha256": "f550ce7fa9c0a100e3b4a8c9b579a021446e12bc2212383db9f505b33ad1de95",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/SearchAccessPlan.cs",
+      "destination": "src/CardProbability/Internal/Search/SearchAccessPlan.cs",
+      "sourceSha256": "a20546c018a533c89b2319df0e27bc6fb45219a339312699549da6f50a8aaabe",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/SearchCountingDiagnostics.cs",
+      "destination": "src/CardProbability/Internal/Search/SearchCountingDiagnostics.cs",
+      "sourceSha256": "4ffdc2491af576ca3dfcfa78024081fc4545a5196bc6a5ceabf3268304251c50",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/SearchDecisionCounter.cs",
+      "destination": "src/CardProbability/Internal/Search/SearchDecisionCounter.cs",
+      "sourceSha256": "16449cfc03d82a7961f46e3fc4e8b085ed5449d85019b1b742ba5dab9575f8ec",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/SearchDecisionCounter.Survivors.cs",
+      "destination": "src/CardProbability/Internal/Search/SearchDecisionCounter.Survivors.cs",
+      "sourceSha256": "89dba98edaa5106b6d98e51c8c7c580dbc34da4d033fe979dd11b7473ae7c552",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/SearchEventTemplate.cs",
+      "destination": "src/CardProbability/Internal/Search/SearchEventTemplate.cs",
+      "sourceSha256": "0e45ec96e043eda71192d166d5b6924f9537ea3f720ee59bdd7bf4a759869748",
+      "transfer": "identical Git blob"
+    },
+    {
+      "source": "YGOProbabilityCalculatorBlazor/Engine/Internal/Search/TargetSurvivalUpperBound.cs",
+      "destination": "src/CardProbability/Internal/Search/TargetSurvivalUpperBound.cs",
+      "sourceSha256": "b40908e1b9d59e9622742568558423e1c04a8b076541191585aa57a0f5b30e12",
+      "transfer": "identical Git blob"
+    }
+  ],
+  "hashBasis": "Exact source Git blob bytes at calculatorCommit; Windows worktree CRLF is not part of this hash."
+}
