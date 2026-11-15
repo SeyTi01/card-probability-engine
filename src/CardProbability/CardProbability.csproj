@@ -7,14 +7,14 @@
     <AssemblyName>CardProbability</AssemblyName>
     <RootNamespace>CardProbability</RootNamespace>
     <PackageId>CardProbability.Engine</PackageId>
-    <Version>1.0.0-preview.1</Version>
+    <Version>1.0.0</Version>
     <Authors>SeyTi01</Authors>
     <Description>A synchronous, domain-neutral probability engine for finite decks, overlapping goals, distinct physical copies, and fixed-order draw, search and excavation effects.</Description>
     <PackageProjectUrl>https://github.com/SeyTi01/card-probability-engine</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SeyTi01/card-probability-engine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>probability;cards;combinatorics;deck;calculation</PackageTags>
-    <PackageReleaseNotes>Initial preview for .NET 10. Includes exact rational results, overlapping goal unions, fixed-order effects, and explicit accuracy and resource outcomes. See the README for supported scope and model limitations.</PackageReleaseNotes>
+    <PackageReleaseNotes>First stable release for .NET 10. Includes exact rational results, overlapping goal unions, fixed-order effects, and explicit accuracy and resource outcomes. See the README for supported scope and model limitations.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -32,3 +32,4 @@
     <None Include="../../LICENSE" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>
+

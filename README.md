@@ -2,14 +2,14 @@
 
 Calculate probabilities for a finite deck of physical copies, overlapping memberships and goals, with optional draw, search and excavation operations. Results preserve exact rational values and distinguish a proven physical probability from a faster projection or certified interval.
 
-The package targets **.NET 10** and uses only the .NET base class library. Its public namespace and assembly name are `CardProbability`. The initial version is **`1.0.0-preview.1`**.
+The package targets **.NET 10** and uses only the .NET base class library. Its public namespace and assembly name are `CardProbability`. The stable version is **`1.0.0`**.
 
 ## Install
 
 In a .NET 10 project:
 
 ```sh
-dotnet add package CardProbability.Engine --version 1.0.0-preview.1
+dotnet add package CardProbability.Engine --version 1.0.0
 ```
 
 ## Calculate an opening hand
