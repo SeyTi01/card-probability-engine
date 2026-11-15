@@ -11,7 +11,7 @@ dotnet build CardProbability.slnx --configuration Release
 dotnet test tests/CardProbability.EngineTests --configuration Release
 dotnet run --project samples/BasicCalculation
 dotnet run --project samples/SupportedEffects
-node scripts/validate.mjs --version 1.0.0-preview.1 --output artifacts
+node scripts/validate.mjs --version 1.0.0 --output artifacts
 ```
 
 `validate.mjs` builds the library, runs the complete neutral suite and public samples, and packs the Release package once. It inspects the NuGet package and symbols, including TFM, XML documentation, README/license, repository commit, dependency metadata and portable-PDB Source Link. It then restores the public consumer and both samples from that package into fresh temporary projects and a fresh cache outside the source graph. The artifact directory contains the `.nupkg`, `.snupkg`, `manifest.json` and `SHA256SUMS`.
@@ -21,7 +21,7 @@ The public consumer must remain public-only. It checks independently counted fra
 Source-project references are convenient for development but do not prove package consumption. To recheck existing artifacts without rebuilding:
 
 ```sh
-node scripts/verify-artifact.mjs artifacts 1.0.0-preview.1 SOURCE_COMMIT NUPKG_SHA256
+node scripts/verify-artifact.mjs artifacts 1.0.0 SOURCE_COMMIT NUPKG_SHA256
 ```
 
 Replace the final two arguments with the candidate's source commit and expected SHA-256. Preserve independent mathematical expectations when adding regression coverage; deriving expected values from the implementation under test does not validate its semantics.
@@ -32,7 +32,7 @@ The library owns all source beneath `src/CardProbability`, neutral tests/fixture
 
 Public names and semantics are both compatibility contracts. Review requirement assignment, effect/tie ordering, `PolicyOrderKey`, defaults, capabilities and accuracy alongside API signatures. Replacing an existing constructor or method with a signature containing a new optional parameter can break already-compiled consumers; retain old signatures when a compatible addition is intended.
 
-Package version, runtime `ModelVersion`, and each host's persistence or transport versions are separate. A package release alone does not imply a model or host-schema change. The first preview allows integration feedback before stable API compatibility is promised.
+Package version, runtime `ModelVersion`, and each host's persistence or transport versions are separate. A package release alone does not imply a model or host-schema change. Stable 1.x releases preserve the documented public API and mathematical semantics.
 
 ## Release procedure
 
@@ -46,4 +46,4 @@ Configure NuGet Trusted Publishing for the personal owner and repository `SeyTi0
 
 Treat published versions as durable. Fix a published mistake with a new version; a duplicate-version response does not establish artifact identity. If a process rebuilds the package, the rebuilt artifact must pass the relevant package and integration checks before publication.
 
-After the contract and integration are accepted, build and verify a distinct `1.0.0` artifact through the same path. Add `PackageValidationBaselineVersion` against the stable version for later compatible releases. Binary package validation complements semantic tests; it cannot prove that a new implementation means the same thing.
+For compatible releases after `1.0.0`, add `PackageValidationBaselineVersion` against the published stable version. Binary package validation complements semantic tests; it cannot prove that a new implementation means the same thing.
