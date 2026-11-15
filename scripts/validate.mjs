@@ -10,7 +10,7 @@ for (let index = 2; index < process.argv.length; index += 2) {
   if (!['--version', '--output'].includes(name) || !value || options.has(name)) throw new Error('Usage: node scripts/validate.mjs [--version VERSION] [--output DIRECTORY]');
   options.set(name, value);
 }
-const version = requireVersion(options.get('--version') ?? '1.0.0-preview.1');
+const version = requireVersion(options.get('--version') ?? '1.0.0');
 const output = resolve(repository, options.get('--output') ?? 'artifacts');
 if (existsSync(output) && readdirSync(output).length) throw new Error('Use an empty artifact output directory to avoid mixing candidates.');
 const gitRoot = realpathSync(capture('git', ['rev-parse', '--show-toplevel']));
