@@ -1,0 +1,67 @@
+name: Verify published package
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_run_id:
+        description: Successful manual Validate package run
+        required: true
+        type: string
+      version:
+        description: Published package version
+        required: true
+        type: string
+      source_commit:
+        description: Full candidate source commit
+        required: true
+        type: string
+      package_sha256:
+        description: Accepted candidate nupkg SHA-256
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    if: github.repository == 'SeyTi01/card-probability-engine' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+      PACKAGE_VERSION: ${{ inputs.version }}
+      SOURCE_COMMIT: ${{ inputs.source_commit }}
+      PACKAGE_SHA256: ${{ inputs.package_sha256 }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_commit }}
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Download the accepted candidate
+        uses: actions/download-artifact@v8
+        with:
+          name: package-${{ inputs.version }}
+          path: artifacts/candidate
+          run-id: ${{ inputs.candidate_run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify public package, symbols and fresh consumers
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/verify-published.mjs artifacts/candidate artifacts/published
+      - name: Retain public-feed verification evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: published-verification-${{ inputs.version }}
+          path: artifacts/published/
+          if-no-files-found: error
+          retention-days: 90
