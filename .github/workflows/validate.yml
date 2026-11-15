@@ -9,7 +9,7 @@ on:
       version:
         description: Package version for this candidate
         required: true
-        default: 1.0.0-preview.1
+        default: 1.0.0
         type: string
 
 permissions:
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      PACKAGE_VERSION: ${{ inputs.version || '1.0.0-preview.1' }}
+      PACKAGE_VERSION: ${{ inputs.version || '1.0.0' }}
     steps:
       - uses: actions/checkout@v7
         with:
