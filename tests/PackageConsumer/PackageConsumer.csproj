@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
     <IsPackable>false</IsPackable>
-    <EnginePackageVersion Condition="'$(EnginePackageVersion)' == ''">1.0.0-preview.1</EnginePackageVersion>
+    <EnginePackageVersion Condition="'$(EnginePackageVersion)' == ''">1.0.0</EnginePackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CardProbability.Engine" Version="[$(EnginePackageVersion)]" />
