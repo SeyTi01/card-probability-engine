@@ -16,11 +16,11 @@ on:
         required: true
         type: string
       package_sha256:
-        description: SHA256 of the exact nupkg used in the calculator rehearsal
+        description: SHA256 of the exact validated candidate nupkg
         required: true
         type: string
       rehearsal_url:
-        description: Public GitHub record of native and production worker rehearsal
+        description: Public GitHub record of applicable release and host evidence
         required: true
         type: string
 
