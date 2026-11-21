@@ -1,0 +1,106 @@
+[
+  {
+    "Name": "control-40",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 24, "4-draw": 1},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["529/703", "14351/27417", "3155/9139", "4762/27417", "15869/27417", "4762/27417"]
+  },
+  {
+    "Name": "single-40",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 24, "2-reveal": 1},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["54233/73112", "55561/109668", "667/1976", "38927/219336", "30943/54834", "38927/219336"]
+  },
+  {
+    "Name": "mixed-40",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 21, "2-reveal": 1, "5-reveal": 1, "4-draw": 1, "search": 1},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["66377/83657", "1905214/3262623", "7111571/16313115", "134974/776815", "2106170/3262623", "134974/776815"]
+  },
+  {
+    "Name": "heavy-40",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 12, "2-reveal": 3, "5-reveal": 3, "3-reveal": 2, "1-filtered": 2, "6-remove": 1, "search": 2},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["19155694438132844204083/22830578417398752000000", "111099644933409857/165035354964480000", "159817660221030078031/304407712231983360000", "34400725571562104809/203844450155346000000", "660816141258725116781/913223136695950080000", "34400725571562104809/203844450155346000000"]
+  },
+  {
+    "Name": "control-60",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 44, "4-draw": 1},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["206259/357599", "206803/715198", "7705/32509", "73768/357599", "132491/357599", "73768/357599"]
+  },
+  {
+    "Name": "single-60",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 44, "2-reveal": 1},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["37053/65018", "36623/130036", "1597/6844", "53681/260072", "94531/260072", "53681/260072"]
+  },
+  {
+    "Name": "mixed-60",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 41, "2-reveal": 1, "5-reveal": 1, "4-draw": 1, "search": 1},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["27890113/45057474", "3203323/9655173", "206182523/675862110", "2112322/10240335", "2644339/6144201", "2112322/10240335"]
+  },
+  {
+    "Name": "heavy-60",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 32, "2-reveal": 3, "5-reveal": 3, "3-reveal": 2, "1-filtered": 2, "6-remove": 1, "search": 2},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": ["1452870058184223003498319/2218129686429392736000000", "4935584606343002860291/12779347987659052800000", "1130830528179953545339391/3105381561001149830400000", "38681233721651543104931/188695060130278201500000", "10584126355376122068727271/21737670927008048812800000", "38681233721651543104931/188695060130278201500000"]
+  },
+  {
+    "Name": "challenge-heavy-40-hand6",
+    "HandSize": 6,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 12, "2-reveal": 3, "5-reveal": 3, "3-reveal": 2, "1-filtered": 2, "6-remove": 1, "search": 2},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": null
+  },
+  {
+    "Name": "challenge-heavy-60-priority",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 32, "2-reveal": 3, "5-reveal": 3, "3-reveal": 2, "1-filtered": 2, "6-remove": 1, "search": 2},
+    "Priority": ["6-remove", "1-filtered", "3-reveal", "5-reveal", "2-reveal", "search"],
+    "DirectRequirements": [],
+    "Reference": null
+  },
+  {
+    "Name": "challenge-heavy-40-multiplicity",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 14, "2-reveal": 1, "5-reveal": 2, "3-reveal": 3, "1-filtered": 2, "6-remove": 1, "search": 2},
+    "Priority": [],
+    "DirectRequirements": [],
+    "Reference": null
+  },
+  {
+    "Name": "challenge-heavy-60-direct",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 32, "2-reveal": 3, "5-reveal": 3, "3-reveal": 2, "1-filtered": 2, "6-remove": 1, "search": 2},
+    "Priority": [],
+    "DirectRequirements": [{"Goal": 0, "Entry": "overlap", "Minimum": 1, "Maximum": 1}],
+    "Reference": null
+  },
+  {
+    "Name": "challenge-mixed-40-direct-exclusion",
+    "HandSize": 5,
+    "Copies": {"starter": 6, "extender": 6, "overlap": 3, "filler": 21, "2-reveal": 1, "5-reveal": 1, "4-draw": 1, "search": 1},
+    "Priority": ["5-reveal", "2-reveal", "4-draw", "search"],
+    "DirectRequirements": [{"Goal": 0, "Entry": "overlap", "Minimum": 1, "Maximum": 5}, {"Goal": 2, "Entry": "starter", "Minimum": 0, "Maximum": 0}],
+    "Reference": ["9524236/16313115", "213975023/1435554120", "7111571/16313115", "134974/776815", "7111571/16313115", "134974/776815"]
+  }
+]

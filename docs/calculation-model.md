@@ -14,13 +14,22 @@ Each goal reports its success probability. A reporting group is the union of its
 
 ## Automatic draws
 
-Legal draw operations activate automatically and consume their source. An entry's activation allowance is shared by its physical copies; separate entries have independent allowances. `ActivationLimit: null` removes the entry cap, so another held or newly drawn source copy may activate. All other legality checks still apply.
+Fixed-size draw operations activate automatically and consume their source. An entry's activation allowance is shared by its physical copies; separate entries have independent allowances. `ActivationLimit: null` removes the entry cap, so another held or newly drawn source copy may activate. All other legality checks still apply.
 
 Encounter order is the default. With `ActivationOrder.Priority`, listed source entries rank highest in the supplied order, with physical encounter order breaking ties. Priorities apply separately within draws and searches; they do not reorder phases. A selected activation finishes its full draw batch, hidden milling and mandatory removal before another activation is selected. Newly drawn higher-priority sources can overtake waiting ones.
 
 Hand costs remove eligible other held copies before drawing. The source cannot pay its own cost. The complete hidden-deck cost, draw batch and hidden post-draw mill must fit in the remaining deck. Minimum-hand and first-activation restrictions must also hold. Otherwise the source stays in hand without spending its allowance or costs. A source lacking hand-cost material is deferred and retried after another activation; a pass with no activation ends draw resolution. A batch blocked by deck capacity cannot become legal later because capacity only decreases.
 
 Mandatory removals happen after drawing and can remove newly drawn copies. The source cannot be removed again. Insufficient eligible removal material fails that branch; its probability remains in the original denominator. `FirstActivationOnly` permits a draw only before another draw has activated. `BlocksLaterDraws` closes the draw phase after that activation.
+
+## Random-discard reveals
+
+A reveal enters the same activation queue as a draw. It can activate when draws are unlocked and at least one physical deck copy remains. Choose one uniformly random physical copy from the entire held hand, including the revealed source.
+
+- If the selected copy has the source's `RevealIdentity`, discard only that copy. Any surviving source stays in its original queue position and can reveal again.
+- Otherwise discard the selected copy, consume the revealed source, and draw one. A drawn source can activate in encounter or priority order.
+
+Every reveal counts as an activation for `FirstActivationOnly`. Only a branch that actually draws disables a later excavation with `RequiresNoPriorEffectDraw`. The discard has no triggered effects. An ordinary or differently configured entry can share the reveal identity without acquiring the operation.
 
 ## Deterministic removal policy
 
@@ -50,7 +59,7 @@ For a goal or union, the model asks whether some legal combination of optional s
 
 ## Scope and boundaries
 
-An entry is ordinary when `Effect` is null. A plan contains exactly one supported draw, search or excavation operation. Empty plans, mixed operations on one source, and unsupported field combinations return `Unsupported`. Invalid IDs, references and negative values return `InvalidInput`. See the [operation field table](generic-calculation-api.md#supported-operations-and-boundaries).
+An entry is ordinary when `Effect` is null. A plan contains exactly one supported draw, random-discard reveal, search or excavation operation. Empty plans, mixed operations on one source, and unsupported field combinations return `Unsupported`. Invalid IDs, references and negative values return `InvalidInput`. See the [operation field table](generic-calculation-api.md#supported-operations-and-boundaries).
 
 `OpeningHand` validates supplied plans but suppresses execution and counts only the dealt hand. Other modes apply the same fixed effect policy; `Exact` describes exactness within that policy. Fast's primary may use an optimistic search-survival projection where physical availability is not established; [accuracy and certification](accuracy-and-performance.md) describe what can be concluded from a result.
 

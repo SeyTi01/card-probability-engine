@@ -59,7 +59,7 @@ internal sealed class DrawEffectCalculation(
             ArgumentOutOfRangeException.ThrowIfNegative(card.Copies);
             deckCopies = checked(deckCopies + card.Copies);
 
-            if (card.DrawCount is not null && card.Copies > 0) {
+            if (card.HasDrawEffect && card.Copies > 0) {
                 effects.Add(card);
             }
             else {
@@ -83,7 +83,7 @@ internal sealed class DrawEffectCalculation(
             effects.RemoveAll(inert.Contains);
         }
 
-        if (effects.Any(card => card.EffectPlan.RequiresHandResolution)) {
+        if (effects.Any(card => card.IsRandomDiscardReveal || card.EffectPlan.RequiresHandResolution)) {
             return CalculateOrdered();
         }
 

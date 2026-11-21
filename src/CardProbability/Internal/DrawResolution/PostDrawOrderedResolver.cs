@@ -44,9 +44,10 @@ internal sealed partial class PostDrawCalculation {
             }
 
             initial[layout.DrawsLeft] = handSize;
-            Dictionary<State, BigInteger> current = new() { [new(initial)] = 1 };
+            BigInteger scale = RandomScale(copies, handSize);
+            Dictionary<State, BigInteger> current = new() { [new(initial)] = scale };
             Dictionary<State, BigInteger> terminal = new();
-            long currentCells = initial.Length + 1L;
+            long currentCells = initial.Length + WorkBudget.IntegerCells(scale);
             long terminalCells = 0;
             bool currentPacked = false;
             // Every count/phase is at most copies; source + 1 is at most n.
@@ -62,6 +63,7 @@ internal sealed partial class PostDrawCalculation {
                     owner.PackedLayers++;
                 }
 
+                int remaining = copies - depth;
                 foreach ((State state, BigInteger weight) in current) {
                     // Initial state is ready; every later state was settled before
                     // insertion. Decode at most this one parent when packed. Only
@@ -73,8 +75,6 @@ internal sealed partial class PostDrawCalculation {
                         budget.Spend(values[0]);
                         values = DrawFrontierPacking.Unpack(values);
                     }
-
-                    int remaining = copies - depth;
 
                     if (values[layout.DrawsLeft] == 0) {
                         budget.Spend(WorkBudget.IntegerCells(weight) * (WorkBudget.IntegerCells(factorial[remaining]) + 1));
@@ -96,54 +96,28 @@ internal sealed partial class PostDrawCalculation {
                             continue;
                         }
 
-                        bool candidate = cards[i].DrawCount is not null && TimingAllows(values, i) && !Used(values, i)
-                            && (cards[i].MaximumActivations != 1 || !values.AsSpan(layout.QueueStart).Contains(i));
-                        budget.Spend(values.Length + WorkBudget.IntegerCells(weight) + 1L);
-                        int[] drawn = new int[values.Length + (candidate ? 1 : 0)];
-                        values.CopyTo(drawn, 0);
-                        drawn[i]--;
-                        drawn[layout.HandStart + i]++;
-
-                        if (layout.HasSearchQueue && cards[i].Search is not null) {
-                            layout.EncounterSearch(drawn, i);
+                        int[] drawn = DrawCopy(values, i, weight);
+                        BigInteger prefix = weight * values[i];
+                        if (_hasReveal) {
+                            SettleReveal(drawn, remaining - 1, prefix, 0, 0, StoreChild);
                         }
-
-                        drawn[layout.DrawsLeft]--;
-
-                        if (candidate) {
-                            drawn[^1] = i;
-                        }
-
-                        // Normalize immediately so batches differing only in discarded
-                        // cards or obsolete candidates merge before the next layer.
-                        if (Settle(ref drawn, remaining - 1) != ResolutionOutcome.RemovalUnavailable) {
-                            if (owner.EagerTerminalAggregation && nextPacked && drawn[layout.DrawsLeft] == 0) {
-                                // Settle has completed every pending operation. Nothing can
-                                // observe this history again, so do not retain it in next.
-                                // For any children merged there, sum(w * c) * r! equals
-                                // sum(w * c * r!). Keep the original suffix and terminal
-                                // key, including search capacity, for all counting passes.
-                                BigInteger prefix = weight * values[i];
-                                budget.Spend(WorkBudget.IntegerCells(prefix) * (WorkBudget.IntegerCells(factorial[remaining - 1]) + 1));
-                                Add(
-                                    terminal,
-                                    Terminal(drawn, remaining - 1),
-                                    prefix * factorial[remaining - 1],
-                                    ref terminalCells,
-                                    "terminal hands"
-                                );
-
-                                continue;
-                            }
-
-                            if (nextPacked) {
-                                budget.Spend(drawn.Length);
-                                drawn = DrawFrontierPacking.Pack(drawn);
-                            }
-
-                            Add(next, new(drawn), weight * values[i], ref nextCells, "draw frontier");
+                        else if (Settle(ref drawn, remaining - 1) != ResolutionOutcome.RemovalUnavailable) {
+                            StoreChild(drawn, prefix, 0, 0);
                         }
                     }
+                }
+
+                void StoreChild(int[] child, BigInteger prefix, int stackDepth, long stackCells) {
+                    if ((_hasReveal || owner.EagerTerminalAggregation && nextPacked) && child[layout.DrawsLeft] == 0) {
+                        budget.Spend(WorkBudget.IntegerCells(prefix) * (WorkBudget.IntegerCells(factorial[remaining - 1]) + 1));
+                        Add(terminal, Terminal(child, remaining - 1), prefix * factorial[remaining - 1], ref terminalCells, "terminal hands");
+                        return;
+                    }
+                    if (nextPacked) {
+                        budget.Spend(child.Length);
+                        child = DrawFrontierPacking.Pack(child);
+                    }
+                    Add(next, new(child), prefix, ref nextCells, "draw frontier");
                 }
 
                 owner.PeakStates = Math.Max(owner.PeakStates, next.Count);
@@ -173,6 +147,26 @@ internal sealed partial class PostDrawCalculation {
 
                 return new(hand);
             }
+        }
+
+        private int[] DrawCopy(int[] values, int row, BigInteger weight) {
+            // A uniform discard can distinguish nonadjacent FIFO occurrences even when
+            // the entry activates only once. Keep each token until that allowance is used.
+            bool candidate = cards[row].HasDrawEffect && TimingAllows(values, row) && !Used(values, row)
+                && (_hasReveal || cards[row].MaximumActivations != 1 || !values.AsSpan(layout.QueueStart).Contains(row));
+            budget.Spend(values.Length + WorkBudget.IntegerCells(weight) + 1L);
+            int[] drawn = new int[values.Length + (candidate ? 1 : 0)];
+            values.CopyTo(drawn, 0);
+            drawn[row]--;
+            drawn[layout.HandStart + row]++;
+            drawn[layout.DrawsLeft]--;
+            if (candidate) {
+                drawn[^1] = row;
+            }
+            if (layout.HasSearchQueue && cards[row].Search is not null) {
+                layout.EncounterSearch(drawn, row);
+            }
+            return drawn;
         }
 
         private bool Used(int[] values, int entry) => layout.OptSlot(entry) >= 0 && values[layout.OptSlot(entry)] >= cards[entry].MaximumActivations;
@@ -286,7 +280,7 @@ internal sealed partial class PostDrawCalculation {
                     continue;
                 }
 
-                if ((long)cards[source].DrawCount!.Value + cards[source].PreDrawDeckRemovalCount + cards[source].PostDrawDeckMillCount > remaining) {
+                if ((long)cards[source].DrawBatchSize + cards[source].PreDrawDeckRemovalCount + cards[source].PostDrawDeckMillCount > remaining) {
                     values = RemoveCandidate(values, candidate);
                     continue;
                 }
@@ -385,17 +379,17 @@ internal sealed partial class PostDrawCalculation {
             bool[] costDeferred = new bool[n];
             long minimumLegalDeckConsumption = long.MaxValue;
 
-            if (reservedSource >= 0 && cards[reservedSource].DrawCount is int reservedDrawCount
-                && (long)reservedDrawCount + cards[reservedSource].PreDrawDeckRemovalCount + cards[reservedSource].PostDrawDeckMillCount <= remaining) {
+            if (reservedSource >= 0 && cards[reservedSource].HasDrawEffect
+                && (long)cards[reservedSource].DrawBatchSize + cards[reservedSource].PreDrawDeckRemovalCount + cards[reservedSource].PostDrawDeckMillCount <= remaining) {
                 // A reserved source has already passed its activation checks and is finishing its cost.
-                minimumLegalDeckConsumption = (long)reservedDrawCount + cards[reservedSource].PreDrawDeckRemovalCount + cards[reservedSource].PostDrawDeckMillCount;
+                minimumLegalDeckConsumption = (long)cards[reservedSource].DrawBatchSize + cards[reservedSource].PreDrawDeckRemovalCount + cards[reservedSource].PostDrawDeckMillCount;
             }
 
             for (int i = 0; i < n; i++) {
                 if (!TimingAllows(values, i)
                     || (reservedSource >= 0 && (cards[reservedSource].BlocksLaterDraws || cards[i].FirstActivationOnly))
                     || !pending[i] || values[layout.HandStart + i] - (i == reservedSource ? 1 : 0) == 0 || Used(values, i)
-                    || cards[i].DrawCount is not int drawCount || (long)drawCount + cards[i].PreDrawDeckRemovalCount + cards[i].PostDrawDeckMillCount > remaining
+                    || !cards[i].HasDrawEffect || (long)cards[i].DrawBatchSize + cards[i].PreDrawDeckRemovalCount + cards[i].PostDrawDeckMillCount > remaining
                     || (i == reservedSource && RemainingAllowance(values, i) <= 1)) {
                     continue;
                 }
@@ -404,7 +398,7 @@ internal sealed partial class PostDrawCalculation {
 
                 if (canPay) {
                     activatable[i] = true;
-                    minimumLegalDeckConsumption = Math.Min(minimumLegalDeckConsumption, (long)drawCount + cards[i].PreDrawDeckRemovalCount + cards[i].PostDrawDeckMillCount);
+                    minimumLegalDeckConsumption = Math.Min(minimumLegalDeckConsumption, (long)cards[i].DrawBatchSize + cards[i].PreDrawDeckRemovalCount + cards[i].PostDrawDeckMillCount);
                 }
                 else if (cards[i].PreDrawRemovalCount > 0 || cards[i].MinimumHandSize > 0) {
                     costDeferred[i] = true;
@@ -424,7 +418,7 @@ internal sealed partial class PostDrawCalculation {
                 bool usable = activatable[i];
                 bool redundant = values[layout.HandStart + i] - (i == reservedSource ? 1 : 0) > RemainingAllowance(values, i) - (i == reservedSource ? 1 : 0);
                 bool deferred = costDeferred[i] && !redundant && !cards[i].FirstActivationOnly
-                    && cards[i].DrawCount is int drawCount && (long)drawCount + cards[i].PreDrawDeckRemovalCount + cards[i].PostDrawDeckMillCount <= remainingAfterAnotherDraw;
+                    && cards[i].HasDrawEffect && (long)cards[i].DrawBatchSize + cards[i].PreDrawDeckRemovalCount + cards[i].PostDrawDeckMillCount <= remainingAfterAnotherDraw;
                 int tier = (relevant[i], usable && !redundant, deferred) switch {
                     (true, _, _) => 1,
                     (_, true, _) => 2,
@@ -459,7 +453,7 @@ internal sealed partial class PostDrawCalculation {
             // Remove the latest copy of this identity, retaining FIFO priority.
             for (int q = values.Length - 1; q >= layout.QueueStart; q--) {
                 if (values[q] == selected) {
-                    if (cards[selected].MaximumActivations != 1 || values[layout.HandStart + selected] == 0) {
+                    if (_hasReveal || cards[selected].MaximumActivations != 1 || values[layout.HandStart + selected] == 0) {
                         selectedQueue = q;
                     }
                     break;

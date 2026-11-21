@@ -28,6 +28,9 @@ internal static class DrawEffectFeasibility {
                 return null;
             }
 
+            if (source.Copies > 0 && source.IsRandomDiscardReveal) {
+                return null;
+            }
             if (!source.Active || source.Copies <= 0 || source.DrawCount is not int drawCount) {
                 continue;
             }

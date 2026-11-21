@@ -13,7 +13,7 @@ internal readonly record struct DrawExecutionAssessment(DrawExecutionPath Path, 
         && ((long)effect.DrawCount!.Value + effect.PreDrawDeckRemovalCount + effect.PostDrawDeckMillCount) <= (copies - (long)handSize) / Math.Max(1, effect.Copies);
 
     internal static bool CanDeferIdentities(Card effect) =>
-        (effect.PreDrawRemovalCount == 0 || effect.PreDrawSelector.Kind != CardSelectorKind.Any)
+        !effect.IsRandomDiscardReveal && (effect.PreDrawRemovalCount == 0 || effect.PreDrawSelector.Kind != CardSelectorKind.Any)
         && (effect.PostDrawDiscardCount == 0 || effect.PostDrawSelector.Kind != CardSelectorKind.Any)
         && !effect.EffectPlan.HasActivationRestrictions;
 
@@ -46,6 +46,10 @@ internal readonly record struct DrawExecutionAssessment(DrawExecutionPath Path, 
 
         if (copies > int.MaxValue || handSize < 1 || handSize > copies) {
             return new(DrawExecutionPath.Unknown, false);
+        }
+
+        if (active.Any(card => card.IsRandomDiscardReveal)) {
+            return new(DrawExecutionPath.OrderedFrontier, true);
         }
 
         HashSet<Card>? inert = DrawEffectFeasibility.FindInert(active, (int)copies, handSize);

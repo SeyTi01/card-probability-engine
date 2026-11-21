@@ -57,6 +57,12 @@ Ordered resolution and hand operations need more state: hand composition, physic
 
 A compiled scenario conditions final-hand counting on what has been held, consumed or lost. These states are not additional independent decks. Weights already encode their conditional probability and are aggregated exactly. This avoids rounding every branch before summing.
 
+### Random-discard weights
+
+For a deck of `N` physical copies, let `H` be the opening size plus the sum of all possible positive net hand gains from fixed-size draws. Let `D` count physical copies whose identity matches an active reveal identity, including ordinary siblings. Each reveal reduces the settled hand by one and removes at least one of those `D` copies. Multiplying `N!` by `lcm(1..min(N,H))^min(D,H)` supplies enough integer units for every sequence of random hand choices. A discard of multiplicity `m` from a hand of size `h` takes `m/h` of its parent's weight. Discarding different occurrences of the same queued source can change the next activation, so only equivalent FIFO outcomes can share multiplicity.
+
+For larger reveal schedules the solver groups complete draw batches by their counts and distinct effect orders. A full storage bucket can be drained into lower remaining-deck sizes before later contributions arrive. All continuations consume at least one visible deck copy before they return to a bucket. Accumulating exact prefix weights preserves terminal mass across drains. Failed branches remain in the common denominator.
+
 ## Physical searches and hidden losses
 
 A single excavation resolves between draws and ordinary searches. For each physical hand/deck state, the fixed policy selects the eligible source with the largest excavation count. Each possible target addition is checked with the existing search-assignment rules, using only search opportunities held before that addition. For each goal or requested union, let `G` be the number of remaining physical copies whose addition succeeds, `D` the remaining deck size and `k` the excavation count. The conditional probability is `1 - C(D-G,k) / C(D,k)`: the revealed pool must contain at least one successful target. This counts a reveal once even if several choices work and avoids enumerating all `k`-card pools. Group and total rows use their own unions of successful targets, not sums of individual goal probabilities.

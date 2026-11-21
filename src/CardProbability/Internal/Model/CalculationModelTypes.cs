@@ -77,17 +77,30 @@ internal sealed class Card {
     public DrawEffectPlan EffectPlan { get; }
     public string? PolicyOrderKey { get; }
 
-    public Card(string id, int copies, IEnumerable<CategoryBase> categories, DrawEffectPlan effectPlan, string? policyOrderKey = null) {
+    public string? RevealIdentity { get; }
+
+    public Card(
+        string id,
+        int copies,
+        IEnumerable<CategoryBase> categories,
+        DrawEffectPlan effectPlan,
+        string? policyOrderKey = null,
+        string? revealIdentity = null
+    ) {
         Id = id;
         Copies = copies;
         Categories = [.. categories];
         EffectPlan = effectPlan;
         PolicyOrderKey = policyOrderKey;
+        RevealIdentity = revealIdentity;
     }
 
-    public Card WithCopies(int copies) => new(Id, copies, Categories, EffectPlan, PolicyOrderKey);
+    public Card WithCopies(int copies) => new(Id, copies, Categories, EffectPlan, PolicyOrderKey, RevealIdentity);
     public bool Active => true;
-    public bool HasEffect => DrawCount is not null || Search is not null || Excavation is not null;
+    public bool IsRandomDiscardReveal => EffectPlan.RandomDiscardReveal;
+    public bool HasDrawEffect => DrawCount is not null || IsRandomDiscardReveal;
+    public int DrawBatchSize => IsRandomDiscardReveal ? 1 : DrawCount ?? 0;
+    public bool HasEffect => HasDrawEffect || Search is not null || Excavation is not null;
     public SearchEffectPlan? Search => EffectPlan.Search;
     public ExcavationEffectPlan? Excavation => EffectPlan.Excavation;
     public bool FirstActivationOnly => EffectPlan.FirstActivationOnly;

@@ -1,6 +1,6 @@
 # CardProbability.Engine
 
-Calculate probabilities for a finite deck of physical copies, overlapping memberships and goals, with optional draw, search and excavation operations. Results preserve exact rational values and distinguish a proven physical probability from a faster projection or certified interval.
+Calculate probabilities for a finite deck of physical copies, overlapping memberships and goals, with optional draws, random-discard reveals, searches and excavations. Results preserve exact rational values and distinguish a proven physical probability from a faster projection or certified interval.
 
 The package targets **.NET 10** and uses only the .NET base class library. Its public namespace and assembly name are `CardProbability`. The stable version is **`1.0.0`**.
 
@@ -45,7 +45,7 @@ The [basic sample](https://github.com/SeyTi01/card-probability-engine/blob/main/
 ## Model and results
 
 - Positive requirements for different targets need distinct physical copies. Maxima count every matching copy. Goal, group and total unions count an overlapping outcome once.
-- Supported effects follow a fixed policy: automatic draws, at most one excavation, then optional searches. Newly drawn effects may activate; searched or excavated effects do not.
+- Supported effects follow a fixed policy: automatic draws and random-discard reveals, followed by at most one excavation and then optional searches. Newly drawn effects may activate; searched or excavated effects do not.
 - `Exact` is the default mode and returns physical-exact results within this model, or a failure without probability rows. `Fast` can return exact, bounded or uncertified results. `OpeningHand` validates supplied plans while suppressing their execution.
 - A primary fraction is exact for the selected counting model. Inspect each row's `Accuracy` and `Certified` interval before treating a Fast primary as a physical probability.
 - The API is synchronous and supports cooperative cancellation. Hosts own asynchronous execution, staged results, stale-input handling, transport and persistence.
