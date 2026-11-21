@@ -201,23 +201,32 @@ Failure results have null `Total`/`Accuracy` and empty `Goals`/`Groups`. `Detail
 
 ## Supported operations and boundaries
 
-`EffectPlan` is a closed declarative instruction set: exactly one draw, search, or excavation operation per source. It has no callbacks. Draw plans can express activation limits, hand and hidden-deck costs, post-draw removals and hidden milling, first-activation rules, and draw-blocking constraints. Search plans can express target eligibility, alternative modes, and mode activation limits. Excavation can reveal a fixed positive number and keep one, with an optional no-prior-effect-draw condition.
+`EffectPlan` is a closed declarative instruction set: exactly one draw, random-discard reveal, search or excavation operation per source. It has no callbacks. Draw plans can express activation limits, hand and hidden-deck costs, post-draw removals and hidden milling, first-activation rules, and draw-blocking constraints. Search plans can express target eligibility, alternative modes, and mode activation limits. Excavation can reveal a fixed positive number and keep one, with an optional no-prior-effect-draw condition.
 
 Use `DeckEntry.Effect = null` for an ordinary entry; `new EffectPlan()` with no operation is unsupported. The following table describes legal field combinations; unspecified fields keep their defaults.
 
-| Field | Draw | Search | Excavation |
-| --- | --- | --- | --- |
-| Operation | Positive `DrawCount`, other operations null | Non-null `Search`, other operations null | Non-null `Excavation`, other operations null |
-| `ActivationLimit` | Positive integer or null | Positive integer or null | Exactly 1 |
-| `HandCost`, `RemovalCount`, `MinimumHandSize` | Nonnegative | Nonnegative | Zero |
-| `HandCostEligibility`, `RemovalEligibility` | Null/Any, or a declared membership with a positive corresponding count | Same as draw | Null/Any |
-| `HiddenDeckCost`, `HiddenPostDrawMill` | Nonnegative | Zero | Zero |
-| `FirstActivationOnly`, `BlocksLaterDraws` | Boolean | False | False |
-| Operation-specific fields | Whole draw batch must fit | Targets and optional modes as below | Positive reveal `Count`; optional `RequiresNoPriorEffectDraw` |
+| Field | Draw | Random-discard reveal | Search | Excavation |
+| --- | --- | --- | --- | --- |
+| Operation | Positive `DrawCount` | `RandomDiscardReveal = true` | Non-null `Search` | Non-null `Excavation` |
+| `ActivationLimit` | Positive integer or null | Null | Positive integer or null | Exactly 1 |
+| `HandCost`, `RemovalCount`, `MinimumHandSize` | Nonnegative | Zero | Nonnegative | Zero |
+| `HandCostEligibility`, `RemovalEligibility` | Null/Any, or a membership with a positive corresponding count | Null/Any | Same as draw | Null/Any |
+| `HiddenDeckCost`, `HiddenPostDrawMill` | Nonnegative | Zero | Zero | Zero |
+| `FirstActivationOnly`, `BlocksLaterDraws` | Boolean | False | False | False |
+| Operation-specific fields | Whole batch must fit | Nonblank `DeckEntry.RevealIdentity`; one deck copy must be available | Targets and optional modes as below | Positive reveal count and optional `RequiresNoPriorEffectDraw` |
 
-`ActivationLimit` is **entry-wide**, shared by all physical copies of that entry. It defaults to one. `null` removes that cap, so another held or newly drawn source copy may activate; each activation still consumes one source and must pay all costs. Two separate entries have independent allowances even if their plans are equal. For example, deal two from two search-source copies plus two targets and require two targets: limit one succeeds in 5/6 hands (source+source fails), while null succeeds in all six. The consumer checks both cases.
+`ActivationLimit` is **entry-wide**, shared by all physical copies of that entry. It defaults to one. `null` removes that cap, so another held or newly drawn source copy may activate; ordinary draws and searches still consume their source and pay all costs. Two separate entries have independent allowances even if their plans are equal. For example, deal two from two search-source copies plus two targets and require two targets: limit one succeeds in 5/6 hands (source+source fails), while null succeeds in all six. The consumer checks both cases.
 
 Hand costs remove eligible other held copies before activation. `MinimumHandSize` counts the source before consumption. Draw activation requires the entire hidden deck cost + draw batch + post-draw mill to fit; unavailable sources remain held without paying costs or spending allowance. Legal draws finish consumption/costs, drawing, milling and mandatory removals before another source is chosen. Mandatory removals can remove newly acquired cards; insufficient eligible removal material fails the branch. Removal uses the shared deterministic goal-dependent keep policy. `FirstActivationOnly` allows a draw only before any draw effect has activated; `BlocksLaterDraws` closes the draw phase after that activation.
+
+To model a repeatable reveal and a second entry with the same identity:
+
+```csharp
+DeckEntry source = new("source", 2, new(ActivationLimit: null) { RandomDiscardReveal = true }) { RevealIdentity = "echo" };
+DeckEntry sibling = new("sibling", 1) { RevealIdentity = "echo" };
+```
+
+The host supplies the opaque identity on each entry that should match. Keys compare ordinally. An unkeyed entry never matches. The selected physical copy leaves the hand on every branch. If its identity differs, the revealed source also leaves and one card is drawn. These init-only additions preserve the existing constructors and deconstruction signatures. Existing request meanings retain model version 1.
 
 `SearchOperation.Targets` is non-null; `Eligibility.Any` selects every entry and `new Eligibility("membership")` selects a declared set. Empty `Modes` means no additional mode restrictions. With modes, the **resolved union of all mode target sets must exactly equal `Targets`**, including zero-copy entries. Each activation chooses one mode and one remaining physical target. A mode's positive `ActivationLimit` is shared across all source copies, in addition to the enclosing effect limit; null adds no mode cap. Hand costs, removals and minimum hand size are allowed on searches. Targets already held or lost cannot be fetched from the deck again.
 
@@ -227,7 +236,7 @@ Execution follows the fixed model: draws, at most one excavation, then optional 
 
 Newly **drawn** effects may activate. Newly **searched or excavated** effects do not: earlier phases are closed, and search opportunities are restricted to sources held before the excavation addition. This is a deliberate single-pass model, not recursive effect execution. Search choices are optional; automatic draws and the selected excavation cannot be declined.
 
-Not every composition of operation fields is supported. For example, a source cannot combine draw, search, and excavation instructions; excavation is standalone with one activation; and search mode target memberships must union to the operation's declared targets. Negative counts/bounds and unknown references return `InvalidInput`; a minimum above its maximum remains an impossible requirement. Unsupported compositions and solver capability limits return `Unsupported`. Callers must handle these outcomes rather than infer behavior from effect presence.
+Not every composition of operation fields is supported. For example, each source chooses a single operation; excavation is standalone with one activation; and search mode target memberships must union to the operation's declared targets. Negative counts/bounds and unknown references return `InvalidInput`; a minimum above its maximum remains an impossible requirement. Unsupported compositions and solver capability limits return `Unsupported`. Callers must handle these outcomes rather than infer behavior from effect presence.
 
 The total physical-copy count may be at most `Int32.MaxValue`. Internal packed-coordinate thresholds (including 255 and 64) select representations and are not public deck-size caps. Solver limits are exposed through Work and per-structure Storage policies. More resources do not make an unsupported operation supported.
 

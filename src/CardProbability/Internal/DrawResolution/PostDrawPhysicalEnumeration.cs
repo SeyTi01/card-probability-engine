@@ -149,14 +149,16 @@ internal sealed partial class PostDrawCalculation {
         int copies = cards.Sum(card => card.Copies);
         CalculationResultRows resultRows = new(combos, groups, totalOnly);
         BigInteger[] wins = new BigInteger[resultRows.Count];
-        CheckStorage(wins.Length, wins.Length * (WorkBudget.IntegerCells(factorial[copies]) + 1), "physical results");
+        bool hasReveal = cards.Any(card => card.Copies > 0 && card.IsRandomDiscardReveal);
+        BigInteger denominator = resolver.Denominator(factorial, handSize);
+        CheckStorage(wins.Length, wins.Length * (WorkBudget.IntegerCells(denominator) + 1), "physical results");
 
         BoundedSearchHandCounter? bounded = cards.Any(card => card.EffectPlan.RequiresSearchResolution)
             ? new(cards, combos, budget, priority)
             : null;
 
         PhysicalSearchHandCounter? counter = bounded is null
-            ? new(cards, combos, budget)
+            ? new(cards, combos, budget, memoize: hasReveal)
             : null;
 
         ExcavationHandCounter? excavation = cards.Any(card => card.Excavation is not null)
@@ -167,18 +169,24 @@ internal sealed partial class PostDrawCalculation {
             ? new(cards, budget)
             : null;
 
+        // Excavation divides complete suffix mass among reveal pools. Only defer
+        // suffix multiplication when the terminal is a Boolean success predicate.
+        TerminalAccumulator? accumulator = hasReveal && excavation is null && ObservePhysicalOutcome is null
+            ? new(this, budget, factorial, resultRows, totalOnly) : null;
         int[] available = new int[n];
-        long activations = cards.Where(card => card.DrawCount is not null).Sum(card => Math.Min(card.MaximumActivations, card.Copies));
-        long observations = handSize + cards.Sum(card => (long)(card.DrawCount ?? 0) * (Math.Min(card.MaximumActivations, card.Copies)));
         // Measured small-frontier domain: avoid repeating ordered prefixes when
         // only a few source/identity rows can distinguish them. Outside this
         // conservative structural domain, stream rather than speculate/ retry.
         // This is a selection estimate, not a promise to fit: both routes charge
         // actual work and storage and report typed failure at unchanged limits.
-        bool frontier = method == PhysicalEnumerationMethod.Frontier || (method == PhysicalEnumerationMethod.Auto && n <= 8 && handSize <= 5 && activations <= 4 && observations <= 12);
+        bool frontier = method == PhysicalEnumerationMethod.Frontier || (method == PhysicalEnumerationMethod.Auto && !PreferStreamedDraws(cards))
+            || (hasReveal && (ObservePhysicalOutcome is not null || ObserveTerminal is not null));
         Route = frontier ? SolverRoute.SearchPhysicalFrontier : SolverRoute.SearchPhysicalEnumeration;
 
-        if (!layout.HasSearchQueue && cards.All(card => card.DrawCount is null)) {
+        if (hasReveal && !frontier) {
+            resolver.StreamReveal(handSize, copies, factorial, CountTerminal);
+        }
+        else if (!layout.HasSearchQueue && cards.All(card => !card.HasDrawEffect)) {
             // With no draw phase the order of the opening hand is unobservable.
             // Enumerate count vectors with physical binomial mass, not permutations.
             Route = SolverRoute.SearchOnly;
@@ -223,7 +231,8 @@ internal sealed partial class PostDrawCalculation {
             resolver.Enumerate(handSize, copies, CountTerminal);
         }
 
-        ExactProbability[] result = wins.Select(win => new ExactProbability(win, factorial[copies])).ToArray();
+        accumulator?.Flush(wins);
+        ExactProbability[] result = wins.Select(win => new ExactProbability(win, denominator)).ToArray();
 
         return resultRows.ToResult(result);
 
@@ -237,8 +246,15 @@ internal sealed partial class PostDrawCalculation {
             // For a hidden vector l: product C(r_i,l_i) * H! * (R-H)!
             // counts its labeled suffixes. This is joint, not independent losses.
             // Removed/consumed observed cards are already absent from state[0..n].
-            budget.Spend(WorkBudget.IntegerCells(weight) * (WorkBudget.IntegerCells(factorial[hidden]) + WorkBudget.IntegerCells(factorial[remaining - hidden]) + 2));
-            BigInteger suffixWeight = weight * factorial[hidden] * factorial[remaining - hidden];
+            BigInteger suffixWeight;
+            if (accumulator is null) {
+                budget.Spend(WorkBudget.IntegerCells(weight) * (WorkBudget.IntegerCells(factorial[hidden]) + WorkBudget.IntegerCells(factorial[remaining - hidden]) + 2));
+                suffixWeight = weight * factorial[hidden] * factorial[remaining - hidden];
+            }
+            else {
+                budget.Spend((WorkBudget.IntegerCells(weight) + 1) * (WorkBudget.IntegerCells(factorial[hidden]) + 1));
+                suffixWeight = weight * factorial[hidden];
+            }
 
             if (hidden == 0) {
                 budget.Spend(n);
@@ -276,6 +292,10 @@ internal sealed partial class PostDrawCalculation {
                 bool[] success = bounded is null ? counter!.Evaluate(state.AsSpan(layout.HandStart, n), capacity ?? available)
                     : bounded.Evaluate(state.AsSpan(layout.HandStart, n), available, encounters);
 
+                if (accumulator is not null) {
+                    accumulator.Add(success, remaining - hidden, mass, wins);
+                    return;
+                }
                 if (success.Any(value => value)) {
                     wins[0] += mass;
                 }
@@ -302,7 +322,7 @@ internal sealed partial class PostDrawCalculation {
             void VisitLoss(int row, int left, int pool, BigInteger mass) {
                 budget.SearchDiagnostics?.Add("physical hidden allocation nodes");
                 budget.Spend(1 + WorkBudget.IntegerCells(mass));
-                CheckStorage(n + 1L, (n + 1L) * (WorkBudget.IntegerCells(factorial[copies]) + 5), "hidden loss stack");
+                CheckStorage(n + 1L, (n + 1L) * (WorkBudget.IntegerCells(denominator) + 5), "hidden loss stack");
 
                 if (row == n) {
                     if (left != 0) {

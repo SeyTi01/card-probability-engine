@@ -74,7 +74,9 @@ internal sealed partial class PostDrawCalculation(
 
     internal ExactCalculationResult Calculate(List<Combo> combos, IReadOnlyList<ComboGroup>? groups, bool totalOnly = false) {
         List<Card> cards = ReduceDeck(combos);
-        List<Card> deferred = deferIdentities ? DeferUnobservedIdentities(ref cards) : [];
+        bool hasReveal = cards.Any(card => card.Copies > 0 && card.IsRandomDiscardReveal);
+        List<Card> deferred = deferIdentities && (!hasReveal || ObserveTerminal is null && ObservePhysicalOutcome is null)
+            ? DeferUnobservedIdentities(ref cards, allowReveal: hasReveal) : [];
         OrderedDrawPreparation preparation = PrepareOrderedDraw(cards, combos);
         int n = cards.Count;
         int copies = preparation.Copies;
@@ -89,7 +91,7 @@ internal sealed partial class PostDrawCalculation(
         // best handSize copies seen so far. Keep this optimization only when all
         // possible batches fit; exhaustion can change both the final hand size and
         // the effect schedule, which the general resolver handles exactly.
-        if (effects.Length == 1 && filler.Length <= 1) {
+        if (!hasReveal && effects.Length == 1 && filler.Length <= 1) {
             int effect = effects[0];
 
             if (DrawExecutionAssessment.IsExchangeableEffect(cards[effect], relevant[effect], copies, handSize)) {
@@ -113,18 +115,30 @@ internal sealed partial class PostDrawCalculation(
             costEligibility
         );
 
+        if (hasReveal && deferred.Count == 0 && PreferStreamedDraws(cards) && ObserveTerminal is null && ObservePhysicalOutcome is null) {
+            ExactCalculationResult result = CountPhysicalSearch(cards, layout, resolver, factorial, combos, groups, totalOnly, PhysicalEnumerationMethod.Streaming);
+            Route = SolverRoute.Ordered;
+            return result;
+        }
         Dictionary<State, BigInteger> terminal = resolver.Resolve(handSize, copies, factorial, compactFrontierThreshold);
         TerminalStates = terminal.Count;
 
         return deferred.Count > 0
-            ? CountDeferredHands(cards, deferred, terminal, factorial[copies], combos, groups, totalOnly)
-            : CountTerminalHands(cards, terminal, factorial[copies], combos, groups, totalOnly);
+            ? CountDeferredHands(cards, deferred, terminal, resolver.Denominator(factorial, handSize), combos, groups, totalOnly)
+            : CountTerminalHands(cards, terminal, resolver.Denominator(factorial, handSize), combos, groups, totalOnly);
+    }
+
+    private bool PreferStreamedDraws(List<Card> cards) {
+        long activations = cards.Where(card => card.HasDrawEffect).Sum(card => (long)Math.Min(card.MaximumActivations, card.Copies));
+        long observations = handSize + cards.Sum(card => (long)card.DrawBatchSize * Math.Min(card.MaximumActivations, card.Copies));
+        return cards.Count > 8 || handSize > 5 || activations > 4 || observations > 12;
     }
 
     private List<Card> ReduceDeck(List<Combo> combos) {
         ReductionSelectors selectors = PrepareReductionSelectors(combos);
         List<(Card Card, string Signature, string Eligibility)> entries = CreateReductionEntries(selectors);
         List<Card> reduced = [];
+        bool hasReveal = deck.Any(card => card.Copies > 0 && card.IsRandomDiscardReveal);
 
         foreach (IGrouping<string, (Card Card, string Signature, string Eligibility)> group in entries
             .GroupBy(entry => entry.Signature).OrderBy(group => group.Key, StringComparer.Ordinal)) {
@@ -133,10 +147,10 @@ internal sealed partial class PostDrawCalculation(
             // Combining interleaved IDs across different filters changes removals.
             string? previousEligibility = null;
 
-            foreach ((Card card, string _, string eligibility) in group.Where(entry => entry.Card.DrawCount is null)
+            foreach ((Card card, string _, string eligibility) in group.Where(entry => !entry.Card.HasDrawEffect)
                 .OrderBy(entry => entry.Card.Id, StringComparer.Ordinal)) {
 
-                if (eligibility == previousEligibility) {
+                if (eligibility == previousEligibility && (!hasReveal || reduced[^1].RevealIdentity == card.RevealIdentity)) {
                     reduced[^1] = reduced[^1].WithCopies(checked(reduced[^1].Copies + card.Copies));
                 }
                 else {
@@ -146,7 +160,7 @@ internal sealed partial class PostDrawCalculation(
             }
 
             // Effect entries stay separate, preserving OPT identity AND custom rank.
-            reduced.AddRange(group.Where(entry => entry.Card.DrawCount is not null).Select(entry => entry.Card)
+            reduced.AddRange(group.Where(entry => entry.Card.HasDrawEffect).Select(entry => entry.Card)
                 .OrderBy(card => card.Id, StringComparer.Ordinal));
         }
 

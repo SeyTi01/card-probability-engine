@@ -53,6 +53,19 @@ CalculationRequest exclusions = new(
 );
 Fraction(Completed(exclusions, CalculationMode.OpeningHand).Total!, exclusionHands, 10, "hand-wide zero maximum");
 
+CalculationRequest reveal = new(
+    [new("source", 1, new(ActivationLimit: null) { RandomDiscardReveal = true }) { RevealIdentity = "echo" },
+        new("sibling", 1) { RevealIdentity = "echo" }, new("prize", 1), new("blank", 1)],
+    2,
+    [new("prize", [Requirement.OfEntry("prize")])]
+);
+// Without the shared identity, gains and losses of the prize balance at 1/2.
+// Source + sibling, discarding sibling, with the prize next occurs with probability
+// (1/6)(1/2)(1/2) = 1/24. The matching discard forgoes that draw.
+Fraction(Completed(reveal, CalculationMode.Exact).Total!, 11, 24, "matching reveal sibling");
+Union(reveal, CalculationMode.Fast, 11, 24, "physical fast reveal");
+Fraction(Completed(reveal, CalculationMode.OpeningHand).Total!, 1, 2, "opening hand suppresses reveal");
+
 CalculationRequest seven = new([new("lantern", 2), new("stone", 8)], 7, [new Goal("light", [Requirement.OfEntry("lantern")])]);
 // Complement: all-stone hands C(8,7), out of C(10,7).
 Fraction(Completed(seven, CalculationMode.OpeningHand).Total!, Choose(10, 7) - Choose(8, 7), Choose(10, 7), "seven-card opening hand");

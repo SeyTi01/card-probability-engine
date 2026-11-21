@@ -9,12 +9,12 @@ namespace CardProbability.Internal.DrawResolution;
 internal sealed partial class PostDrawCalculation {
     internal int DeferredRows { get; private set; }
 
-    private List<Card> DeferUnobservedIdentities(ref List<Card> cards, HashSet<string>? observedIdentities = null) {
+    private List<Card> DeferUnobservedIdentities(ref List<Card> cards, HashSet<string>? observedIdentities = null, bool allowReveal = false) {
         budget.Spend(cards.Count);
         Card[] effects = [.. cards.Where(card => card.Copies > 0 && card.DrawCount is not null)];
 
-        if (effects.Length == 0 || !effects.All(DrawExecutionAssessment.CanDeferIdentities)
-            || !effects.Any(effect => effect.PreDrawRemovalCount > 0 || effect.PostDrawDiscardCount > 0)) {
+        if (!effects.All(DrawExecutionAssessment.CanDeferIdentities)
+            || !allowReveal && !effects.Any(effect => effect.PreDrawRemovalCount > 0 || effect.PostDrawDiscardCount > 0)) {
             return [];
         }
 
@@ -48,7 +48,10 @@ internal sealed partial class PostDrawCalculation {
         for (int i = 0; i < cards.Count; i++) {
             budget.Spend(1);
 
-            if (cards[i].Copies > 0 && cards[i].DrawCount is null && !material[i]
+            // PreparedCalculation retains only reveal identities observed by an
+            // active source. A random discard can remove an anonymous physical
+            // copy, but all those copies produce the same different-name branch.
+            if (cards[i].Copies > 0 && !cards[i].HasDrawEffect && (!allowReveal || cards[i].RevealIdentity is null) && !material[i]
                 && (observedIdentities is null || !observedIdentities.Contains(cards[i].Id))) {
                 deferred.Add(cards[i]);
             }
@@ -61,7 +64,7 @@ internal sealed partial class PostDrawCalculation {
         }
 
         // Keep the canonical relative order of every eligible identity and source.
-        // No pooled card can be removed, activate, or affect a policy decision.
+        // No pooled card can pay a targeted removal, activate, or affect a policy decision.
         // All sources' selectors are retained jointly, including source-copy
         // material. Swapping pool labels cannot change any source's payability,
         // relevance tiers among eligible cards, reserved source, pending FIFO,
@@ -91,8 +94,9 @@ internal sealed partial class PostDrawCalculation {
         // labels across held, unseen and skipped positions preserves capacity,
         // all cost/removal choices and the activation schedule. The resolver's
         // (N - visibleDepth)! suffix counts those skipped positions as well, so
-        // each k-subset has identical integer mass even after repeated milling.
-        // Failed removals contribute no wins but remain in the original N! space.
+        // each k-subset has identical integer mass even after repeated milling
+        // or identity-blind random discards. Failed removals contribute no wins
+        // but remain in the original outcome space, including reveal choices.
         // The ordinary counter projects ALL combo constraints onto this subset;
         // the resolver's removal policy always used the full original combo list.
         CalculationResultRows resultRows = new(combos, groups, totalOnly);
