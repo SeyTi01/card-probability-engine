@@ -6,6 +6,8 @@
 
 Use the .NET SDK selected by `global.json` and Node.js. Ordinary development needs neither a calculator checkout nor the Blazor/WebAssembly workload.
 
+When you create a worktree with the `CardProbability.Engine` local environment in Codex, setup runs `dotnet restore CardProbability.slnx` automatically.
+
 ```sh
 dotnet build CardProbability.slnx --configuration Release
 dotnet test tests/CardProbability.EngineTests --configuration Release
