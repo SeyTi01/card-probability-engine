@@ -11,9 +11,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageReference Include="NUnit.Analyzers" Version="4.4.0" />
     <Using Include="NUnit.Framework" />
-    <Compile Include="../../research/random-discard/LegacyReferenceReplay.cs" />
-    <None Include="../../research/random-discard/legacy-exact.json"
-          Link="Fixtures/Data/legacy-exact.json" CopyToOutputDirectory="PreserveNewest" />
     <!-- Exact friend assembly identity is CardProbability.EngineTests. -->
     <ProjectReference Include="../../src/CardProbability/CardProbability.csproj" />
     <None Update="Fixtures/Data/*.json" CopyToOutputDirectory="PreserveNewest" />

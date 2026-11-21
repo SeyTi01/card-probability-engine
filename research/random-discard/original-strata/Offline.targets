@@ -1,8 +1,0 @@
-<Project>
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'CardProbability'">
-    <Compile Remove="CalculationEngine.cs" />
-    <Compile Include="$(OriginalStrataEntryPoint)" />
-    <Compile Include="$(MSBuildThisFileDirectory)OriginalStrata.cs" />
-    <Compile Include="$(MSBuildProjectDirectory)/../../research/random-discard/PostDrawReveal*.cs" />
-  </ItemGroup>
-</Project>

@@ -21,7 +21,7 @@
 
 Inspect each goal, group and total row separately. A Fast projection can lie outside its certified interval. Equal endpoints can prove a physical fraction different from that projection. A certificate is a mathematical bound, not a statistical confidence interval. Hosts choosing a midpoint display should preserve its interval context and never present a nonzero interval as zero uncertainty.
 
-For eligible random-discard reveals, Fast counts one or two source copies exhaustively. On larger mixtures it can return a certified interval for every goal, group and total. The lower endpoint counts classified physical wins. The upper endpoint adds the probability mass of every unclassified history and is the reported primary fraction. Each union counts its own winning histories. Exact classifies every history or reports a limit. Other combinations of effects retain their existing physical counting routes. [Published calculator benchmarks and replay instructions](../research/random-discard/browser/README.md)
+For eligible random-discard reveals, Fast counts one or two source copies exactly. On larger mixtures, each goal, group and total can receive a certified interval. Its lower endpoint counts known wins. Its upper endpoint also includes the unresolved probability mass and is the reported primary fraction.
 
 Fast can prove exactness. Search-only requests and supported excavation requests use physical counting, and other routes may establish structural exact proof. When draw histories leave search-target survival unproven, Fast can use an identity-blind projection and attempt a separate certificate.
 

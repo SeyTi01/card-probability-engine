@@ -1,6 +1,6 @@
 # Generic calculation API
 
-[Package overview](../README.md) Â· [Calculation model](calculation-model.md) Â· [Accuracy and resources](accuracy-and-performance.md)
+[Package overview](../README.md) · [Calculation model](calculation-model.md) · [Accuracy and resources](accuracy-and-performance.md)
 
 The `CardProbability` API describes a finite deck of physical copies, resolved set memberships, goals, and a closed set of optional operations. A host translates its domain into this model; the engine does not interpret card text, metadata, or catalog identities. It calculates synchronously and returns one terminal result.
 
@@ -122,7 +122,7 @@ Console.WriteLine($"{result.Total!.Primary.Numerator}/{result.Total.Primary.Deno
 
 Choices **inside one `Alternative` are OR**. **Separate `Alternative` groups are AND**: moving C into a second group containing only `Requirement.OfEntry("key")` gives the same answer, as the consumer also checks. `Goal.GroupId` is unrelated to this logic: it assigns the completed goal to a reporting **union**. Two identical goals in `routes` still give 1/3 for the group, not 2/3.
 
-## Draw, reveal, search and excavation
+## Draw, search and excavation
 
 Each of these requests has one source, one target and two blanks, and deals one copy. Opening the target succeeds with probability 1/4. Opening the source also has probability 1/4: drawing one finds the target with probability 1/3, searching finds it with certainty, and revealing two finds it with probability 2/3. Thus the respective totals are **1/3**, **1/2**, and **5/12**.
 

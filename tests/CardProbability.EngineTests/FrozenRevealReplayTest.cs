@@ -32,8 +32,7 @@ public sealed class FrozenRevealReplayTest {
         Assert.That(result.Metrics.PeakEntries, Is.LessThanOrEqualTo(fixture.Options.Policy.EntryLimit));
         Assert.That(result.Metrics.PeakCells, Is.LessThanOrEqualTo(fixture.Options.Policy.CellLimit));
         ProbabilityValue[] rows = [result.Total!, .. result.Goals.Select(goal => goal.Value), .. result.Groups.Select(group => group.Value)];
-        Assert.That(frozen.Reference, Is.Not.Null);
-        Assert.That(rows, Has.Length.EqualTo(frozen.Reference!.Length));
+        Assert.That(rows, Has.Length.EqualTo(frozen.Reference.Length));
         for (int row = 0; row < rows.Length; row++) {
             CertifiedInterval? interval = rows[row].Certified;
             Assert.That(interval, Is.Not.Null);
@@ -52,19 +51,13 @@ public sealed class FrozenRevealReplayTest {
 
     [TestCase("heavy-40")]
     [TestCase("heavy-60")]
-    [Explicit("Full physical replay at standard storage; each case can take several minutes.")]
-    [NonParallelizable]
-    public void ReplayHeavyExact(string name) => CheckExactRows(name, CalculationMode.Exact);
+    [TestCase("challenge-heavy-40-hand6")]
+    public void HeavyExactMatchesPhysicalFractions(string name) => CheckExactRows(name, CalculationMode.Exact);
 
     private static void CheckExactRows(string name, CalculationMode mode) {
         FrozenRevealCase frozen = FrozenRevealCase.Load(name);
         EngineCase fixture = frozen.Create(mode);
         CalculationResult result = CalculationEngine.Calculate(fixture.Request, fixture.Options);
-        AssertRows(result, frozen);
-        TestContext.Out.WriteLine($"{name} {mode}, work {result.Metrics.WorkSpent}, peak {result.Metrics.PeakEntries} entries, {result.Metrics.PeakCells} cells");
-    }
-
-    private static void AssertRows(CalculationResult result, FrozenRevealCase frozen) {
         Assert.That(result.Status, Is.EqualTo(CalculationStatus.Completed), result.Detail);
         ProbabilityValue[] rows = [result.Total!, .. result.Goals.Select(goal => goal.Value), .. result.Groups.Select(group => group.Value)];
         Assert.That(rows.Select(row => $"{row.Primary.Numerator}/{row.Primary.Denominator}"), Is.EqualTo(frozen.Reference));

@@ -1,8 +1,0 @@
-<Project>
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'CardProbability'">
-    <Compile Include="$(MSBuildThisFileDirectory)PostDrawReveal*.cs" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'CardProbability.EngineTests'">
-    <Compile Include="$(MSBuildThisFileDirectory)RevealBoundsExperiment.cs" />
-  </ItemGroup>
-</Project>
