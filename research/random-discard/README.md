@@ -1,16 +1,31 @@
 # Random-discard replay
 
-The exact solver and research workloads were ported from calculator PR #317 at `64e809d`. The original Fast research aimed for intervals at most two percentage points wide on heavy decks. Its best native experiment missed that target. The public engine counts physical outcomes in both Fast and Exact and returns a typed limit if the primary calculation cannot finish. [Original PR](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web/pull/317) · [Original research results, proofs and JavaScript prototypes](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web/tree/64e809da46e4b139949433c95a7caaabe9c222ee/research/danger-fast)
+The public engine follows each reveal in activation order and counts the physical card selected for discard. Fast resolves sparse cases exactly and can certify row-by-row bounds on heavy workloads. Exact includes every physical history. The desktop browser rehearsal measures the published calculator from Calculate to visible rows on 13 frozen workloads and three player decks with five- and six-card hands. [Browser results and reproduction](browser/README.md) · [Counting model](../../docs/probability-engine.md#delaying-card-identities)
+
+The original exact solver and workloads came from calculator PR #317 at `64e809d`. The experimental bounds below remain available for comparison. [Original PR](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web/pull/317) · [Original research results, proofs and JavaScript prototypes](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web/tree/64e809da46e4b139949433c95a7caaabe9c222ee/research/danger-fast)
 
 ## Reproduce the exact baseline
 
-The 13 fixtures use neutral IDs. They preserve physical counts, memberships, original policy tie order, activation priorities, hand sizes and goal/group order. Nine have frozen exact references covering every result row. The four heavy challenge variants have no stored exact reference. [Fixture data](../../tests/CardProbability.EngineTests/Fixtures/Data/reveal-cases.json) · [Original inputs and reference provenance](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web/blob/64e809da46e4b139949433c95a7caaabe9c222ee/research/danger-fast/fixture-manifest.json)
+The 13 fixtures use neutral IDs. They preserve physical counts, memberships, original policy tie order, activation priorities, hand sizes and goal/group order. Nine have original exact references covering every result row. The four heavy challenge variants initially lacked exact references. The additional legacy physical replays record the available comparisons. [Fixture data](../../tests/CardProbability.EngineTests/Fixtures/Data/reveal-cases.json) · [Original inputs and reference provenance](https://github.com/SeyTi01/ygo-advanced-probability-calculator-web/blob/64e809da46e4b139949433c95a7caaabe9c222ee/research/danger-fast/fixture-manifest.json) · [Legacy exact references](legacy-reference-replay.md)
 
 The regular test suite checks the inexpensive reference cases and the heavy Fast workloads. To run the two heavy Exact replays with unlimited Work and standard Storage, use the following command from the repository root. Allow several minutes per case.
 
 ```sh
 dotnet test tests/CardProbability.EngineTests -c Release --filter FullyQualifiedName~ReplayHeavyExact --logger "console;verbosity=normal"
 ```
+
+### Public Fast and Exact replay
+
+The public replay runs the fixtures serially under each mode's default Work and Storage policy. Each JSON file records the elapsed time of the synchronous calculation, its outcome, every primary fraction and certified interval, and the reported resource metrics. A resource-limited call records its terminal status and empty rows. The runner checks available exact references and certified enclosures by integer arithmetic.
+
+```powershell
+$env:CARD_PROBABILITY_REVEAL_CASE = 'all'
+$env:CARD_PROBABILITY_REVEAL_MODE = 'both'
+$env:CARD_PROBABILITY_REVEAL_OUTPUT = Join-Path (Get-Location) 'artifacts/reveal-native'
+dotnet test tests/CardProbability.EngineTests -c Release --filter FullyQualifiedName~LegacyReferenceReplay.ReplayPublicCases --logger "console;verbosity=normal"
+```
+
+Use one fixture name and `Fast` or `Exact` to replay a single case in a fresh process. A run over all fixtures shares the runtime across calls. To compare revisions, use the same harness, runtime, build configuration and execution order, and choose a separate output directory for each run.
 
 ## Reproduce experimental bounds
 
