@@ -129,6 +129,9 @@ internal sealed partial class PostDrawCalculation {
         private readonly long[] _layerCells;
         private readonly Dictionary<Leaf, BigInteger> _leaves = [];
         private readonly BigInteger[] _wins;
+        private readonly int _framesPerBatch;
+        private readonly long _cellsPerBatch;
+        private int _drainDepth;
         private BigInteger _resolved;
         private long _leafCells;
 
@@ -161,6 +164,13 @@ internal sealed partial class PostDrawCalculation {
             _slotMask = (1UL << _maskBits) - 1;
             _full = (1 << passive.Length) - 1;
             _randomChoices = factorial[handSize] * _colorScale;
+            // A live activation retains the draw word, its mandatory removals
+            // and their integer coefficients. Only an actual nested drain
+            // keeps another such path on the call stack.
+            _framesPerBatch = 8 + Math.Max(handSize, _batch.Max()) + 3 * _discard.Max();
+            long coefficientCells = WorkBudget.IntegerCells(factorial[^1]) + WorkBudget.IntegerCells(_randomChoices) + 1;
+            _cellsPerBatch = _framesPerBatch * (18L + 4 * coefficientCells);
+            owner.CheckStorage(_framesPerBatch, _cellsPerBatch, "symbolic reveal transition stack");
             // At least this many cards remain after every possible operation.
             // Their unseen permutations multiply every terminal mass and the
             // denominator equally. Retain only remaining! / minimumRemaining!.
@@ -248,9 +258,12 @@ internal sealed partial class PostDrawCalculation {
         private void Drain(int layer) {
             // Each activation consumes a physical source before another state
             // can enter a layer. Its descendants only write to lower layers.
+            _drainDepth++;
+            _owner.CheckStorage((1L + _drainDepth) * _framesPerBatch, (1L + _drainDepth) * _cellsPerBatch, "symbolic reveal transition stack");
             foreach ((Position state, BigInteger weight) in _layers[layer]) {
                 Activate(state, weight);
             }
+            _drainDepth--;
             _layers[layer].Clear();
             _layerCells[layer] = 0;
         }

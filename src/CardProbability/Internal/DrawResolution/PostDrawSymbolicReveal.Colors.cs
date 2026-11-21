@@ -57,6 +57,7 @@ internal sealed partial class PostDrawCalculation {
         private readonly int _colorScale;
 
         private int[] FindColors(List<Card> cards) {
+            _budget.Spend(_active.Length * (long)(_active.Length + 2 + _removal.Sum(order => order?.Length ?? 0)));
             int[] tokens = Enumerable.Range(1, _active.Length).Where(t => _reveal[t]
                 && _identity.Count(identity => identity == _identity[t]) == 1).ToArray();
             foreach (IGrouping<(int Copies, int Rank), int> candidates in tokens.GroupBy(t => (cards[_active[t - 1]].Copies, _priority[t]))
@@ -87,6 +88,7 @@ internal sealed partial class PostDrawCalculation {
             if ((_colorMask & (1 << token)) == 0) {
                 return 1;
             }
+            _budget.Spend(1L + Length(state.Queue, QueueBits) + _colors.Length);
             int queued = 0;
             for (uint rest = state.Queue; rest != 0; rest >>= QueueBits) {
                 queued |= 1 << (int)(rest & 7);

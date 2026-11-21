@@ -70,7 +70,8 @@ internal sealed partial class PostDrawCalculation {
                 _removalOrder[activeRows[i]] = order.Where(token => token < 0).Select(token => -token - 1).ToArray();
             }
 
-            budget.CheckStorage(_total + 1L, 3L * (_total + 1) + (_total + 1L) * (_total + 2L) / 2);
+            long coefficientCount = (_total + 1L) * (_total + 2L) / 2;
+            budget.CheckStorage(coefficientCount, 3L * (_total + 1) + coefficientCount);
             _factorial = new BigInteger[_total + 1];
             _choose = new BigInteger[_total + 1][];
             _factorial[0] = 1;
