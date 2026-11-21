@@ -247,10 +247,25 @@ async function main() {
                         if (e.name !== 'TimeoutError') throw e;
                         sample.outcome = 'censored';
                         sample.cutoffMs = cutoff;
-                        sample.partial = await page.evaluate(i => {
+                        const partial = await page.evaluate(i => {
                             const r = window.browserBenchmark.runs[i];
-                            return { workers: window.browserBenchmark.workers, requests: r?.requests.map(q => ({ id: q.id, sent: q.sent, received: q.received })) };
+                            return { started: r?.started, elapsedMs: r ? performance.now() - r.started : null,
+                                workersBefore: r?.workersBefore, workers: window.browserBenchmark.workers, requests: r?.requests.map(q => ({
+                                id: q.id, worker: q.worker, sent: q.sent, received: q.received,
+                                execution: q.execution, fastStage: q.fastStage, json: q.json })) ?? [] };
                         }, index);
+                        sample.partial = { ...partial, requests: partial.requests.map(({ json, ...q }) => q) };
+                        if (partial.requests.length) {
+                            assert.equal(partial.requests.length, 1);
+                            const q = partial.requests[0], wire = JSON.parse(q.json);
+                            assert.equal(q.execution, exact ? 'interactive-exact-v1' : null);
+                            assert.equal(q.fastStage, null);
+                            assert.equal(q.worker, 0);
+                            assert.equal(partial.workers.length, 1, 'Measurement must retain the original worker');
+                            assert.equal(partial.workersBefore, index === 0 ? 0 : 1);
+                            assert.deepEqual(comparable(wire), comparable(expectedWire));
+                            sample.wireHash = hash(wire);
+                        }
                         break;
                     }
                     const { run, workers } = await page.evaluate(i => ({ run: window.browserBenchmark.runs[i], workers: window.browserBenchmark.workers }), index);

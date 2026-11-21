@@ -1,0 +1,174 @@
+{
+  "EngineRevision": "88d7e83a969bcfa63b2bc84423f4512b50d82e4f",
+  "CalculatorRevision": "a2c9d5ead93ced00353aaf40ac6f6eb8a213e2b0",
+  "CalculatorChanges": "browser/calculator-host.patch",
+  "EngineAssemblySha256": "2c7bdd57e477a8a5816a2d5f825e477e18036c8afc0feb7ea257b70b20414060",
+  "CalculatorAssemblySha256": "fa43e8a4e484add16c270dcdf48b631ec241fc083dec6be3095006d9080a8a6b",
+  "LegacyPublicPolicy": {
+    "Mode": "Exact",
+    "WorkUnits": null,
+    "EntryLimit": 32768,
+    "CellLimit": 262144
+  },
+  "InputHashConvention": "SHA-256 of the source Fast worker input, recursively ordinal-key-sorted objects, original array order, compact UTF-8 JSON.",
+  "Cases": [
+    {
+      "Method": "Original retained-stratum prototype, complete physical mass",
+      "Source": "legacy-reference-replay.md#offline-six-card-reference",
+      "OfflinePolicy": {
+        "WorkUnits": null,
+        "EntryLimit": 1500000,
+        "CellLimit": 160000000,
+        "FrontierCapacity": 1500000
+      },
+      "ResolvedAll": true,
+      "Evicted": 0,
+      "Stop": "exhausted retained frontier",
+      "Expanded": 7650230,
+      "Metrics": {
+        "WorkSpent": 41861910227,
+        "PeakEntries": 1490528,
+        "PeakCells": 20294216
+      },
+      "Name": "challenge-heavy-40-hand6",
+      "Rows": [
+        "833146737499871252532911/933516984178082304000000",
+        "77449321289109555194147/99624342185012736000000",
+        "13548359908535455523257/22707169885412812800000",
+        "14814974083600930382531/108642062813828544000000",
+        "239636178922396237675193/296528924385979084800000",
+        "14814974083600930382531/108642062813828544000000"
+      ],
+      "InputHash": "f7825ec7c0771bc50f8b8b3bbf690df613e86d8a52583e85bc1b42dc8cae86b2"
+    },
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "challenge-heavy-60-priority",
+      "Rows": [
+        "24499293901889332359293/36843510045776353920000",
+        "20484594629661695204513/51756359350019163840000",
+        "3915687092281820551387/10526717155936101120000",
+        "529725328988839978913/2583205101248728320000",
+        "2161435940098826784883739/4347534185401609762560000",
+        "529725328988839978913/2583205101248728320000"
+      ],
+      "Metrics": {
+        "WorkSpent": 18054866011,
+        "RemainingWork": null,
+        "PeakEntries": 29120,
+        "PeakCells": 262144
+      },
+      "InputHash": "2195ac7729fa84a1b9dae63d3ce061fb84a883adc0684b0b631c2eadaea412a3"
+    },
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "challenge-heavy-40-multiplicity",
+      "Rows": [
+        "114805188631129573550819/136983470504392512000000",
+        "58502439311323719073/86973632066280960000",
+        "8931734170119873035977/17122933813049064000000",
+        "62056624019980291901/362390133609504000000",
+        "98844044791769872595591/136983470504392512000000",
+        "62056624019980291901/362390133609504000000"
+      ],
+      "Metrics": {
+        "WorkSpent": 9668988487,
+        "RemainingWork": null,
+        "PeakEntries": 29126,
+        "PeakCells": 262144
+      },
+      "InputHash": "2b7c57f41ee7033659da15b5c6dcdba1ebbcf541d2ecf22dbce948622efdd1ed"
+    },
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "challenge-heavy-60-direct",
+      "Rows": [
+        "57849083853110292106932301/108688354635040244064000000",
+        "111059542225843477153/1944683389426377600000",
+        "1130830528179953545339391/3105381561001149830400000",
+        "38681233721651543104931/188695060130278201500000",
+        "1130830528179953545339391/3105381561001149830400000",
+        "38681233721651543104931/188695060130278201500000"
+      ],
+      "Metrics": {
+        "WorkSpent": 73406320663,
+        "RemainingWork": null,
+        "PeakEntries": 29127,
+        "PeakCells": 262144
+      },
+      "InputHash": "378ce0e095161ce8403be9f66725ca5b3ffbfbf321e05544b8c440f3b95120a5"
+    }
+  ],
+  "PlayerCases": [
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "phantom-knights-5",
+      "Rows": [
+        "63539155/104403936",
+        "718490999/1957573800",
+        "184999/548340",
+        "63539155/104403936"
+      ],
+      "InputHash": "507c333fc639d601e4fc12b47f313967dccb1e97f447b4d64f34657dd6105931"
+    },
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "phantom-knights-6",
+      "Rows": [
+        "36091201/51269790",
+        "65008091/139826700",
+        "108059/274170",
+        "36091201/51269790"
+      ],
+      "InputHash": "49b1932fa4d8e15b9fd7d371f831a3cc4351ccb40b1672a057a2e331769323e9"
+    },
+    {
+      "Method": "Independent integer enumeration of Thunder Dragon reveal histories with conditional terminal hand counting",
+      "Name": "thunder-dragon-5",
+      "Rows": [
+        "3996840749814463/10765966834022400",
+        "26447222030567473/121958218041660000",
+        "26447222030567473/121958218041660000",
+        "3996840749814463/10765966834022400"
+      ],
+      "InputHash": "ef69951fcd531d061b119a291f3ff447bb3d0a94b783297503f102fa018fd668",
+      "Source": "research/random-discard/browser/thunder-reference/README.md",
+      "Normalized": true
+    },
+    {
+      "Method": "Independent integer enumeration of Thunder Dragon reveal histories with conditional terminal hand counting",
+      "Name": "thunder-dragon-6",
+      "Rows": [
+        "38950116314371367826709/82190082302635507200000",
+        "372483951821268693143/1284220035978679800000",
+        "372483951821268693143/1284220035978679800000",
+        "38950116314371367826709/82190082302635507200000"
+      ],
+      "InputHash": "3d0e43d80ab73c3c0ef269d81d8f2f758da5829e5fe5651039781a601ad580e3",
+      "Source": "research/random-discard/browser/thunder-reference/README.md",
+      "Normalized": true
+    },
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "lightsworn-5",
+      "Rows": [
+        "457260261119873/1117605585096000",
+        "1380403981370833/5588027925480000",
+        "3329187032531/16631035492500",
+        "457260261119873/1117605585096000"
+      ],
+      "InputHash": "86ef8120ecea8f9e7aebe46745e477d45d6985a9fe8a95b506a34282731e8598"
+    },
+    {
+      "Method": "Legacy public Exact physical solver",
+      "Name": "lightsworn-6",
+      "Rows": [
+        "7313999906918311/15113075525730000",
+        "17170125525361/59043313929600",
+        "113065076641371947/443316882088080000",
+        "7313999906918311/15113075525730000"
+      ],
+      "InputHash": "dbe123e8a3da6ed5761a55a0771b01110bebc25412382171c1ac650a9ba3bf79"
+    }
+  ]
+}

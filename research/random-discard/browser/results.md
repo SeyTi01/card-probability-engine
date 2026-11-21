@@ -4,6 +4,8 @@ Engine source `22f4e91768cef2238560be40f8d7b6cad5f7f22f`, calculator source `a2c
 
 Edge 158.0.4370.33 on AMD Ryzen 7 5700X 8-Core Processor. Each first click starts a fresh worker after the calculator session loads. The warm column takes the slowest of 3 subsequent Calculate clicks on that worker. The width column takes the largest certified full interval across every row and sample. The display column takes the largest outward-rounded ± value shown on screen. The Work and Storage columns give the maxima measured by the engine.
 
+Reference comparison covered 408 Fast row observations in 76 successful clicks. Each certified interval contains its reference fraction and each exact row equals its reference. [Reference methods](../legacy-reference-replay.md)
+
 ## Five- and six-card player hands
 
 Both hands use the same main-deck entries, effect settings and goals. Each player group contains both goals, giving the same union as Any combo.
@@ -66,7 +68,9 @@ Each sample uses the same deck and worker after a Fast warmup. Clicking Calculat
 | lightsworn-5 | 76.8 | 3,411,844 | 1,507 | 30,028 | Exact |
 | lightsworn-6 | 81.8 | 4,664,106 | 1,939 | 40,685 | Exact |
 
-[Exact samples and rational rows](edge-final-exact.json)
+For thunder-dragon-6, the report records the successful Fast warmup, Exact selection through the UI, one retained worker and the next request dispatch. The 60-second observation ended before a response. The original timeout record omitted that request’s worker execution discriminator and input hash. Wire parity and engine metrics are available for the completed Exact cases.
+
+Reference comparison matched 48 rational rows across 9 completed Exact samples. [Exact samples and rational rows](edge-final-exact.json)
 
 ## Default calculator mode
 

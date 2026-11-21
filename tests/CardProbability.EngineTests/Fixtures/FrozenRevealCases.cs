@@ -13,8 +13,17 @@ internal sealed record FrozenRevealCase(
     internal sealed record DirectRequirement(int Goal, string Entry, int Minimum, int Maximum);
 
     internal static FrozenRevealCase[] ReadAll() {
-        string path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "Data", "reveal-cases.json");
-        return JsonSerializer.Deserialize<FrozenRevealCase[]>(File.ReadAllText(path))!;
+        string directory = Path.Combine(AppContext.BaseDirectory, "Fixtures", "Data");
+        FrozenRevealCase[] cases = JsonSerializer.Deserialize<FrozenRevealCase[]>(File.ReadAllText(Path.Combine(directory, "reveal-cases.json")))!;
+        string legacyPath = Path.Combine(directory, "legacy-exact.json");
+        if (!File.Exists(legacyPath)) {
+            return cases;
+        }
+        using JsonDocument capture = JsonDocument.Parse(File.ReadAllText(legacyPath));
+        Dictionary<string, string[]> references = capture.RootElement.GetProperty("Cases").EnumerateArray()
+            .ToDictionary(item => item.GetProperty("Name").GetString()!, item => item.GetProperty("Rows").Deserialize<string[]>()!);
+        return cases.Select(fixture => fixture.Reference is null && references.TryGetValue(fixture.Name, out string[]? reference)
+            ? fixture with { Reference = reference } : fixture).ToArray();
     }
 
     internal static FrozenRevealCase Load(string name) => ReadAll().Single(row => row.Name == name);

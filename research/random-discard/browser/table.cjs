@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const { verifyReferences } = require('./verify-references.cjs');
 const [input, destination, exactInput, defaultInput] = process.argv.slice(2);
 assert(input && destination, 'table.cjs <raw-fast-report.json> <new-table.md> [raw-exact-report.json] [default-flow-report.json]');
 const report = JSON.parse(fs.readFileSync(input));
@@ -9,6 +10,8 @@ const lines = ['# Published desktop Fast results', '',
     `Engine source \`${report.engineCommit}\`, calculator source \`${report.hostCommit}\`, package SHA-256 \`${report.packageSha256}\`, published asset digest \`${report.assetsSha256}\`.`, '',
     `Edge ${report.browser} on ${report.cpu.trim()}. Each first click starts a fresh worker after the calculator session loads. The warm column takes the slowest of ${report.warmSamples} subsequent Calculate clicks on that worker. The width column takes the largest certified full interval across every row and sample. The display column takes the largest outward-rounded ± value shown on screen. The Work and Storage columns give the maxima measured by the engine.`, ''];
 const integer = n => n.toLocaleString('en-US');
+const fastCheck = verifyReferences(report);
+lines.push(`Reference comparison covered ${fastCheck.checkedRows} Fast row observations in ${fastCheck.checkedSamples} successful clicks. Each certified interval contains its reference fraction and each exact row equals its reference. [Reference methods](../legacy-reference-replay.md)`, '');
 const display = r => r.uncertainty === '±0%' ? r.value : r.value + ' ' + r.uncertainty;
 lines.push('## Five- and six-card player hands', '',
     'Both hands use the same main-deck entries, effect settings and goals. Each player group contains both goals, giving the same union as Any combo.', '',
@@ -52,6 +55,7 @@ for (const [title, predicate] of [
 if (exactInput) {
     const exact = JSON.parse(fs.readFileSync(exactInput));
     assert(exact.finished && exact.mode === 'Exact' && exact.assetsSha256 === report.assetsSha256 && exact.packageSha256 === report.packageSha256);
+    const exactCheck = verifyReferences(exact);
     assert.deepEqual(exact.cases.map(c => c.name).sort(), report.cases.filter(c => c.reveals > 2).map(c => c.name).sort());
     lines.push('## Optional heavy Exact', '',
         'Each sample uses the same deck and worker after a Fast warmup. Clicking Calculate in Exact mode keeps Standard Storage and permits unlimited Work. The time limit is 60,000 ms per warm click. Every completed physical fraction was checked against every corresponding Fast interval.', '',
@@ -80,7 +84,10 @@ if (exactInput) {
                 s.outcome === 'success' ? (s.passesLatencyTarget ? 'Exact' : 'Missed 60 s') : s.outcome].join(' | ') + ' |');
         }
     }
-    lines.push('', '[Exact samples and rational rows](edge-final-exact.json)', '');
+    for (const e of exact.cases.filter(c => c.samples.some(s => s.outcome === 'censored' && !s.wireHash))) {
+        lines.push('', `For ${e.name}, the report records the successful Fast warmup, Exact selection through the UI, one retained worker and the next request dispatch. The 60-second observation ended before a response. The original timeout record omitted that request’s worker execution discriminator and input hash. Wire parity and engine metrics are available for the completed Exact cases.`);
+    }
+    lines.push('', `Reference comparison matched ${exactCheck.checkedRows} rational rows across ${exactCheck.checkedSamples} completed Exact samples. [Exact samples and rational rows](edge-final-exact.json)`, '');
 }
 if (defaultInput) {
     const flows = JSON.parse(fs.readFileSync(defaultInput));

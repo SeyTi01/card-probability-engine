@@ -21,7 +21,7 @@ const summary = { ...metadata, rawSha256: crypto.createHash('sha256').update(byt
             if (index < 0) { index = unique.length; unique.push(outcome); }
             const ms = t => t == null ? null : Number(t.toFixed(3));
             return { phase: s.temperature, uiMs: ms(s.uiMs), workerMs: ms(s.roundTripMs),
-                bootstrapMs: ms(s.bootstrapMs), cutoffMs: s.cutoffMs, metrics: s.response?.Metrics, outcome: index };
+                bootstrapMs: ms(s.bootstrapMs), cutoffMs: s.cutoffMs, partial: s.partial, metrics: s.response?.Metrics, outcome: index };
         });
         return { name: c.name, inputHash: c.inputHash, sessionHash: c.sessionHash, wireHash: c.samples[0]?.wireHash, fastWarmup: c.fastWarmup,
             hand: c.hand, reveals: c.reveals, passed: c.passed, error: c.error, samples, outcomes: unique };

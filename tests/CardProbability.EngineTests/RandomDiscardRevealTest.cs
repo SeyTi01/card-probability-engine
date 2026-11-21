@@ -24,6 +24,7 @@ public sealed class RandomDiscardRevealTest {
     [TestCase("minimum")]
     [TestCase("fetch-reveal")]
     [TestCase("ordered-search")]
+    [TestCase("shared-observers")]
     public void EveryRowMatchesPhysicalDiscardAndDeckEnumeration(string scenario) {
         foreach (bool ranked in new[] { false, true }) {
             EngineCase fixture = SmallCase(scenario, ranked);
@@ -63,6 +64,39 @@ public sealed class RandomDiscardRevealTest {
         CalculationRequest request = new([Reveal("r", "key"), new("a", 1), new("b", 1)], opening, [new("source", [Requirement.OfEntry("r")])]);
         Assert.That(CalculationEngine.Calculate(request).Total!.Primary, Is.EqualTo(new RationalProbability(numerator, denominator)));
         Assert.That(CalculationEngine.Calculate(request, new(CalculationMode.OpeningHand)).Total!.Probability, Is.EqualTo(opening / 3d));
+    }
+
+    [TestCase(1, 0)]
+    [TestCase(0, 1)]
+    public void UnobservedRevealDiscardsAndHiddenLossPreserveTerminalRoleCounts(int hiddenCost, int mill) {
+        DeckEntry[] entries = [
+            Reveal("source", "shared"), new("sibling", 1) { RevealIdentity = "shared" },
+            new("filter", 1, new(DrawCount: 2, HiddenDeckCost: hiddenCost, HiddenPostDrawMill: mill,
+                RemovalCount: 1, RemovalEligibility: new("material"))),
+            new("material", 1), new("left", 1), new("right", 1), new("bridge", 1)
+        ];
+        Membership[] memberships = [
+            new("material", ["material", "source"]), new("left", ["left", "bridge"]), new("right", ["right", "bridge"])
+        ];
+        Goal[] goals = [
+            new("pair", [Requirement.InMembership("left"), Requirement.InMembership("right")], groupId: "g"),
+            new("bridge", [Requirement.OfEntry("bridge")], groupId: "g"),
+            new("sibling", [Requirement.OfEntry("sibling"), Requirement.InMembership("right", 0, 0)])
+        ];
+        EngineCase fixture = new("deferred reveal", new(entries, 3, goals, memberships, ["g"]), new());
+        RevealSequenceOracle.Rational[] expected = RevealSequenceOracle.Count(fixture);
+        foreach (bool defer in new[] { false, true }) {
+            WorkBudget budget = new(Core.CalculationWorkPolicy.Unlimited);
+            PreparedCalculation input = fixture.Prepare(budget);
+            PostDrawCalculation calculation = new(input.Cards, fixture.Request.HandSize, budget, deferIdentities: defer);
+            ExactProbability[] rows = calculation.Calculate(input.Combos, input.Groups).ToRows();
+            Assert.That(calculation.DeferredRows, Is.EqualTo(defer ? 3 : 0));
+            Assert.That(rows, Has.Length.EqualTo(expected.Length));
+            for (int row = 0; row < rows.Length; row++) {
+                Assert.That(rows[row].Numerator * expected[row].Denominator,
+                    Is.EqualTo(expected[row].Numerator * rows[row].Denominator), $"defer={defer}, row {row}");
+            }
+        }
     }
 
     [TestCase(false, "2", "3", "0", "1")]
@@ -138,6 +172,9 @@ public sealed class RandomDiscardRevealTest {
     }
 
     internal static EngineCase SmallCase(string scenario, bool ranked = false) {
+        if (scenario == "shared-observers") {
+            return SharedObservers(ranked);
+        }
         DeckEntry source = Reveal("r", "shared", scenario is "fifo" or "ordered-search" ? 1 : 2);
         DeckEntry second = scenario switch {
             "split" => Reveal("s", "shared"),
@@ -175,4 +212,29 @@ public sealed class RandomDiscardRevealTest {
 
     private static DeckEntry Reveal(string id, string identity, int copies = 1) =>
         new(id, copies, new(ActivationLimit: null) { RandomDiscardReveal = true }) { RevealIdentity = identity };
+
+    private static EngineCase SharedObservers(bool ranked) {
+        DeckEntry[] entries = [
+            Reveal("r", "shared"), Reveal("s", "shared"),
+            new("sibling", 1) { RevealIdentity = "shared" },
+            new("filter", 1, new(DrawCount: 2, ActivationLimit: null, RemovalCount: 1, RemovalEligibility: new("material"))),
+            new("search", 1, new(ActivationLimit: null, Search: new(new("targets")))),
+            new("bridge", 1), new("other", 1)
+        ];
+        Membership[] memberships = [
+            new("material", ["r", "sibling", "bridge"]),
+            new("targets", ["sibling", "bridge"]),
+            new("left", ["r", "sibling", "bridge"]),
+            new("right", ["bridge", "other"])
+        ];
+        Goal[] goals = [
+            new("pair", [Requirement.InMembership("left"), Requirement.InMembership("right")], groupId: "g"),
+            new("bridge", [Requirement.OfEntry("bridge")], groupId: "g"),
+            new("sibling-without-bridge", [Requirement.OfEntry("sibling"), Requirement.OfEntry("bridge", 0, 0)], groupId: "h")
+        ];
+        // Only the filter is ranked. The two reveal entries tie in encounter order,
+        // even when one survives discarding a different entry with the same identity.
+        CalculationOptions options = ranked ? new(activationOrder: ActivationOrder.Priority, priorityEntryIds: ["filter"]) : new();
+        return new("shared-observers", new(entries, 3, goals, memberships, ["g", "h"]), options);
+    }
 }

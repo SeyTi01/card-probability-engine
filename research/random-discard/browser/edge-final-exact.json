@@ -728,6 +728,20 @@
           "workerMs": null,
           "bootstrapMs": null,
           "cutoffMs": 60000,
+          "partial": {
+            "workers": [
+              {
+                "created": 2209.199999988079,
+                "ready": 2398.899999976158
+              }
+            ],
+            "requests": [
+              {
+                "id": 2,
+                "sent": 3418.099999964237
+              }
+            ]
+          },
           "outcome": 0
         }
       ],
