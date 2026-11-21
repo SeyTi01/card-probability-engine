@@ -75,7 +75,8 @@ internal sealed partial class PostDrawCalculation(
     internal ExactCalculationResult Calculate(List<Combo> combos, IReadOnlyList<ComboGroup>? groups, bool totalOnly = false) {
         List<Card> cards = ReduceDeck(combos);
         bool hasReveal = cards.Any(card => card.Copies > 0 && card.IsRandomDiscardReveal);
-        List<Card> deferred = !hasReveal && deferIdentities ? DeferUnobservedIdentities(ref cards) : [];
+        List<Card> deferred = deferIdentities && (!hasReveal || ObserveTerminal is null && ObservePhysicalOutcome is null)
+            ? DeferUnobservedIdentities(ref cards, allowReveal: hasReveal) : [];
         OrderedDrawPreparation preparation = PrepareOrderedDraw(cards, combos);
         int n = cards.Count;
         int copies = preparation.Copies;
@@ -114,7 +115,7 @@ internal sealed partial class PostDrawCalculation(
             costEligibility
         );
 
-        if (hasReveal && PreferStreamedDraws(cards) && ObserveTerminal is null && ObservePhysicalOutcome is null) {
+        if (hasReveal && deferred.Count == 0 && PreferStreamedDraws(cards) && ObserveTerminal is null && ObservePhysicalOutcome is null) {
             ExactCalculationResult result = CountPhysicalSearch(cards, layout, resolver, factorial, combos, groups, totalOnly, PhysicalEnumerationMethod.Streaming);
             Route = SolverRoute.Ordered;
             return result;
@@ -123,7 +124,7 @@ internal sealed partial class PostDrawCalculation(
         TerminalStates = terminal.Count;
 
         return deferred.Count > 0
-            ? CountDeferredHands(cards, deferred, terminal, factorial[copies], combos, groups, totalOnly)
+            ? CountDeferredHands(cards, deferred, terminal, resolver.Denominator(factorial, handSize), combos, groups, totalOnly)
             : CountTerminalHands(cards, terminal, resolver.Denominator(factorial, handSize), combos, groups, totalOnly);
     }
 
