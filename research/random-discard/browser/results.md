@@ -72,6 +72,8 @@ For thunder-dragon-6, the report records the successful Fast warmup, Exact selec
 
 Reference comparison matched 48 rational rows across 9 completed Exact samples. [Exact samples and rational rows](edge-final-exact.json)
 
+A separate six-card Thunder Dragon run also reached the 60-second cutoff. It recorded a new Exact request on the same worker that had completed the Fast warmup and verified the production execution discriminator and input. The worker had returned no response at the cutoff. [Repeat observation](edge-thunder-6-exact-repeat.json)
+
 ## Default calculator mode
 
 After opening Help and returning to the calculator, both sessions used the fresh app’s default Progressive mode.

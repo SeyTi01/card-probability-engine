@@ -12,7 +12,7 @@ dotnet run --project $oracle -c Release -- 5 $inputs
 dotnet run --project $oracle -c Release --no-build -- 6 $inputs
 ```
 
-Each JSON output contains the fixture name, its canonical SHA-256, and exact rational rows in calculator order: total, Solar, Fusion, group. The program requires the summed physical probability of all successful and failed branches to equal exactly one before emitting a result.
+Each JSON output contains the fixture name, its canonical SHA-256, and exact rational rows for the total, Solar, Fusion and group, in that order. The program requires the summed physical probability of all successful and failed branches to equal exactly one before emitting a result.
 
 ## Physical histories
 
@@ -30,4 +30,4 @@ The remaining 20 cards are ordinary, non-DARK cards. They include three Batterym
 
 For a surviving DARK Thunder Dragon monster, the number of winning pool subsets is `C(20,k) − C(20−x,k)`, with `x=3` for either individual goal and `x=6` for their union. Without a surviving DARK Thunder monster, a winning subset must also contain one of the two light Thunder monsters. Subtract `C(18,k) − C(18−x,k)` in that case. The two three-copy goals consequently have equal physical probabilities, and the only reporting group equals the total union.
 
-The oracle uses this conditional combinatorial calculation directly. It does not load the engine, its compiled goal evaluator, its calculation results, or its search and terminal caches.
+The program implements its own queue, removal policy and combinatorial goal calculation. The calculator supplies the authored input and its reporting order.

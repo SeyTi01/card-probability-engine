@@ -56,7 +56,7 @@ To exercise optional interactive Exact, use `REVEAL_MODE=Exact` and select the i
 
 The separate untimed default-flow check verifies the fresh app's selected calculation mode, then imports a session saved with that default Progressive strategy. It opens Help, returns to the imported deck, clicks Calculate, and verifies the ordinary exact result and the heavy result through the default Progressive owner. When a bounded result starts a physical upgrade, the check uses the visible cancellation control and verifies the accepted rows remain available.
 
-Pass the optional Exact and default-flow reports as the third and fourth arguments to `table.cjs` to include these checks. The table generator confirms every available physical Exact fraction falls inside each Fast sample's certified interval. [Measured player goals and desktop results](results.md)
+Pass the optional Exact and default-flow reports as the third and fourth arguments to `table.cjs` to include these checks. A separate raw six-card Thunder Dragon Exact repeat can be supplied as the fifth argument. The table generator confirms every available physical Exact fraction in the matrix falls inside each Fast sample's certified interval. [Measured player goals and desktop results](results.md)
 
 To verify stored numerical results offline from the engine root, run `node research/random-discard/browser/verify-references.cjs research/random-discard/browser/edge-final.json`. The checker accepts raw or compact reports and reads the original frozen fractions plus the additional exact reference vectors. Running it on `edge-final-exact.json` lists any cases without a terminal row, including the censored six-card Thunder Dragon sample.
 

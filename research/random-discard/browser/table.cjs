@@ -1,8 +1,8 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { verifyReferences } = require('./verify-references.cjs');
-const [input, destination, exactInput, defaultInput] = process.argv.slice(2);
-assert(input && destination, 'table.cjs <raw-fast-report.json> <new-table.md> [raw-exact-report.json] [default-flow-report.json]');
+const [input, destination, exactInput, defaultInput, exactRepeatInput] = process.argv.slice(2);
+assert(input && destination, 'table.cjs <raw-fast-report.json> <new-table.md> [raw-exact-report.json] [default-flow-report.json] [thunder-6-exact-repeat.json]');
 const report = JSON.parse(fs.readFileSync(input));
 assert(report.finished && report.mode === 'Fast' && report.cases.length === 19 && report.warmSamples >= 3,
     'Use a complete 19-case Fast matrix with at least three warm clicks');
@@ -88,6 +88,22 @@ if (exactInput) {
         lines.push('', `For ${e.name}, the report records the successful Fast warmup, Exact selection through the UI, one retained worker and the next request dispatch. The 60-second observation ended before a response. The original timeout record omitted that request’s worker execution discriminator and input hash. Wire parity and engine metrics are available for the completed Exact cases.`);
     }
     lines.push('', `Reference comparison matched ${exactCheck.checkedRows} rational rows across ${exactCheck.checkedSamples} completed Exact samples. [Exact samples and rational rows](edge-final-exact.json)`, '');
+    if (exactRepeatInput) {
+        const repeat = JSON.parse(fs.readFileSync(exactRepeatInput));
+        assert(repeat.finished && repeat.mode === 'Exact' && repeat.cases.length === 1 && repeat.assetsSha256 === exact.assetsSha256 &&
+            repeat.packageSha256 === exact.packageSha256 && repeat.browser === exact.browser);
+        const e = repeat.cases[0], s = e.samples[0], original = exact.cases.find(c => c.name === e.name);
+        assert(e.name === 'thunder-dragon-6' && e.inputHash === original.inputHash && e.samples.length === 1 && s.temperature === 'warm' && s.wireHash);
+        if (s.outcome === 'censored') {
+            const q = s.partial.requests[0];
+            assert(s.cutoffMs === 60000 && q.execution === 'interactive-exact-v1' && q.worker === 0 && !q.received &&
+                s.partial.workersBefore === 1 && s.partial.workers.length === 1);
+            lines.push('A separate six-card Thunder Dragon run also reached the 60-second cutoff. It recorded a new Exact request on the same worker that had completed the Fast warmup and verified the production execution discriminator and input. The worker had returned no response at the cutoff. [Repeat observation](edge-thunder-6-exact-repeat.json)', '');
+        } else {
+            assert(s.outcome === 'success' && verifyReferences(repeat).checkedSamples === 1);
+            lines.push(`A separate six-card Thunder Dragon run returned all four Exact rows in ${s.uiMs.toFixed(1)} ms on a worker warmed with the same deck. The harness verified the production execution discriminator, input and reference fractions. [Repeat observation](edge-thunder-6-exact-repeat.json)`, '');
+        }
+    }
 }
 if (defaultInput) {
     const flows = JSON.parse(fs.readFileSync(defaultInput));
