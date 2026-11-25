@@ -15,7 +15,8 @@ internal readonly record struct DrawEffectPlan(
     SearchEffectPlan? Search = null,
     int? ActivationLimit = null,
     int MinimumHandSize = 0,
-    ExcavationEffectPlan? Excavation = null
+    ExcavationEffectPlan? Excavation = null,
+    bool RandomDiscardReveal = false
 ) {
     public static DrawEffectPlan Draw(int count, bool oncePerTurn) => new(count, oncePerTurn, 0, CardSelector.Any, 0, 0, CardSelector.Any);
 

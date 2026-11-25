@@ -13,6 +13,7 @@ internal sealed record PreparedCalculation(List<M.Card> Cards, List<M.Combo> Com
         HashSet<string> groups = Ids(request.Groups, "group");
         long copies = 0;
         bool explicitPolicyOrder = request.Entries.Any(entry => entry.PolicyOrderKey is not null);
+        HashSet<string> revealIdentities = new(StringComparer.Ordinal);
         Dictionary<string, List<M.CategoryBase>> categories = entries.ToDictionary(id => id, _ => new List<M.CategoryBase>(), StringComparer.Ordinal);
         Dictionary<string, HashSet<string>> eligible = new(StringComparer.Ordinal);
         Dictionary<string, M.CardSelector> selectors = new(StringComparer.Ordinal);
@@ -28,7 +29,15 @@ internal sealed record PreparedCalculation(List<M.Card> Cards, List<M.Combo> Com
             if (explicitPolicyOrder && entry.PolicyOrderKey is null) {
                 throw new ArgumentException("Supply a policy order key for every entry or for none of them.");
             }
-            cells += entry.PolicyOrderKey?.Length ?? 0;
+            if ((entry.RevealIdentity is not null && string.IsNullOrWhiteSpace(entry.RevealIdentity))
+                || (entry.Effect?.RandomDiscardReveal == true && entry.RevealIdentity is null)) {
+                throw new ArgumentException($"Entry '{entry.Id}' needs a nonblank reveal identity.");
+            }
+            if (entry.Copies > 0 && entry.Effect?.RandomDiscardReveal == true && options.Mode != CalculationMode.OpeningHand) {
+                budget.Spend(entry.RevealIdentity!.Length + 1L);
+                revealIdentities.Add(entry.RevealIdentity);
+            }
+            cells += (long)(entry.PolicyOrderKey?.Length ?? 0) + (entry.RevealIdentity?.Length ?? 0);
             budget.CheckStorage(entries.Count, cells);
         }
         if (copies > int.MaxValue) {
@@ -66,7 +75,14 @@ internal sealed record PreparedCalculation(List<M.Card> Cards, List<M.Combo> Com
             M.DrawEffectPlan plan = options.Mode == CalculationMode.OpeningHand || entry.Effect is null
                 ? new(null, false, 0, M.CardSelector.Any, 0, 0, M.CardSelector.Any)
                 : Effect(entry.Effect);
-            cards.Add(new(entry.Id, entry.Copies, categories[entry.Id], plan, entry.PolicyOrderKey));
+            // Only an active reveal can observe this identity. Other keys may pool
+            // together even when the host supplied a distinct key on every entry.
+            string? revealIdentity = null;
+            if (revealIdentities.Count > 0 && entry.RevealIdentity is { } key) {
+                budget.Spend(key.Length + 1L);
+                revealIdentities.TryGetValue(key, out revealIdentity);
+            }
+            cards.Add(new(entry.Id, entry.Copies, categories[entry.Id], plan, entry.PolicyOrderKey, revealIdentity));
         }
 
         List<M.Combo> combos = new(request.Goals.Length);
@@ -130,9 +146,10 @@ internal sealed record PreparedCalculation(List<M.Card> Cards, List<M.Combo> Com
                 || effect.RemovalCount < 0 || effect.HiddenPostDrawMill < 0 || effect.MinimumHandSize < 0) {
                 throw new ArgumentException("Operation counts must be nonnegative and draw counts and activation limits must be positive.");
             }
-            int operations = (effect.DrawCount.HasValue ? 1 : 0) + (effect.Search is not null ? 1 : 0) + (effect.Excavation is not null ? 1 : 0);
+            int operations = (effect.DrawCount.HasValue ? 1 : 0) + (effect.Search is not null ? 1 : 0) + (effect.Excavation is not null ? 1 : 0)
+                + (effect.RandomDiscardReveal ? 1 : 0);
             if (operations != 1) {
-                throw new NotSupportedException("Each effect source must contain exactly one draw, search, or excavation operation.");
+                throw new NotSupportedException("Each effect source must contain exactly one draw, random-discard reveal, search, or excavation operation.");
             }
             Filter(effect.HandCostEligibility, entryId);
             Filter(effect.RemovalEligibility, entryId);
@@ -142,6 +159,10 @@ internal sealed record PreparedCalculation(List<M.Card> Cards, List<M.Combo> Com
             }
             if (effect.DrawCount is null && (effect.HiddenDeckCost > 0 || effect.HiddenPostDrawMill > 0 || effect.FirstActivationOnly || effect.BlocksLaterDraws)) {
                 throw new NotSupportedException("Hidden deck costs and draw sequencing restrictions require a draw operation.");
+            }
+            if (effect.RandomDiscardReveal && (effect.ActivationLimit is not null || effect.HandCost != 0
+                || effect.RemovalCount != 0 || effect.MinimumHandSize != 0)) {
+                throw new NotSupportedException("A random-discard reveal is standalone and repeatable.");
             }
             if (effect.Excavation is { } excavation) {
                 if (excavation.Count <= 0) {
@@ -195,7 +216,8 @@ internal sealed record PreparedCalculation(List<M.Card> Cards, List<M.Combo> Com
                 Search: search,
                 ActivationLimit: effect.ActivationLimit,
                 MinimumHandSize: effect.MinimumHandSize,
-                Excavation: effect.Excavation is { } excavation ? new(excavation.Count, excavation.RequiresNoPriorEffectDraw) : null
+                Excavation: effect.Excavation is { } excavation ? new(excavation.Count, excavation.RequiresNoPriorEffectDraw) : null,
+                RandomDiscardReveal: effect.RandomDiscardReveal
             );
         }
 

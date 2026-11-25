@@ -3,6 +3,7 @@ using CardProbability.Internal.Model;
 using CardProbability.Internal.Contracts;
 using CardProbability.Internal.Resources;
 using CardProbability.Internal.Certification;
+using CardProbability.Internal.DrawResolution;
 
 namespace CardProbability.Internal;
 
@@ -20,6 +21,10 @@ internal sealed class CalculationRuntime {
     ) {
         ValidateMode(options);
         CalculationModel mode = options?.Mode ?? CalculationModel.Fast;
+
+        if (TryCalculateReveal(deck, combos, handSize, groups, budget, options, physicalFast, unionOnly: false) is { } reveal) {
+            return reveal;
+        }
 
         bool hasEffects = deck.Any(card => card.HasEffect);
         DrawEffectCalculation? execution = hasEffects ? new(
@@ -48,6 +53,9 @@ internal sealed class CalculationRuntime {
     ) {
         ValidateMode(options);
         CalculationModel mode = options?.Mode ?? CalculationModel.Fast;
+        if (TryCalculateReveal(deck, combos, handSize, null, budget, options, physicalFast, unionOnly: true) is { } reveal) {
+            return reveal;
+        }
         bool hasEffects = deck.Any(card => card.HasEffect);
         DrawEffectCalculation? execution = hasEffects ? new(
             deck,
@@ -165,6 +173,31 @@ internal sealed class CalculationRuntime {
         );
 
         return result with { Contract = contract };
+    }
+
+    private static ProbabilityCalculationResult? TryCalculateReveal(
+        List<Card> deck, List<Combo> combos, int handSize, IReadOnlyList<ComboGroup>? groups,
+        WorkBudget budget, RuntimeOptions? options, bool physicalFast, bool unionOnly
+    ) {
+        CalculationModel mode = options?.Mode ?? CalculationModel.Fast;
+        if (physicalFast || mode is not (CalculationModel.Fast or CalculationModel.Exact) || options?.CertifySearchAvailability == true) {
+            return null;
+        }
+        // Sparse reveal packages are inexpensive enough to count physically in
+        // Fast. Keep its configured Work and Storage checks on the exact route.
+        long revealCopies = 0;
+        foreach (Card card in deck) {
+            if (card.Active && card.IsRandomDiscardReveal) {
+                revealCopies += card.Copies;
+            }
+        }
+        if (revealCopies == 0) {
+            return null;
+        }
+        budget.Spend(deck.Count);
+        PostDrawCalculation calculation = new(deck, handSize, budget, options?.DrawActivationPriority);
+        PostDrawCalculation.SymbolicRevealResult? result = calculation.TryCountSymbolicReveal(combos, groups, exhaustive: mode == CalculationModel.Exact || revealCopies <= 2);
+        return result is null ? null : RevealCertificate.Complete(result.Wins, result.Resolved, result.Denominator, combos, groups, unionOnly, budget, mode);
     }
 
     private static void ValidateMode(RuntimeOptions? options) {

@@ -21,6 +21,8 @@
 
 Inspect each goal, group and total row separately. A Fast projection can lie outside its certified interval. Equal endpoints can prove a physical fraction different from that projection. A certificate is a mathematical bound, not a statistical confidence interval. Hosts choosing a midpoint display should preserve its interval context and never present a nonzero interval as zero uncertainty.
 
+For eligible random-discard reveals, Fast counts one or two source copies exactly. On larger mixtures, each goal, group and total can receive a certified interval. Its lower endpoint counts known wins. Its upper endpoint also includes the unresolved probability mass and is the reported primary fraction.
+
 Fast can prove exactness. Search-only requests and supported excavation requests use physical counting, and other routes may establish structural exact proof. When draw histories leave search-target survival unproven, Fast can use an identity-blind projection and attempt a separate certificate.
 
 `CalculationResult.Certification` describes that optional attempt. `Limited` or `Error` can accompany a completed primary; they do not turn it into a failed calculation. Exhausting resources before the primary completes does return a failure without rows. `CalculateUnion` omits optional certification while retaining structural exactness established by the primary route, so it may report weaker proof than `Calculate` for the same primary fraction.

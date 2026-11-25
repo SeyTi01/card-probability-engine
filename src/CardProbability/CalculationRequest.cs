@@ -44,7 +44,11 @@ public sealed class CalculationRequest {
 /// <param name="PolicyOrderKey">Advanced deterministic keep/removal ordering key. Supply keys for all entries or none; empty and equal keys are legal.</param>
 /// <remarks>Keys compare ordinally before ordinary/effect-source and entry-ID tie-breaks. Omitted keys derive from
 /// requirement membership. Changing keys can change outcomes when costs or removals execute; they do not set activation priority.</remarks>
-public sealed record DeckEntry(string Id, int Copies, EffectPlan? Effect = null, string? PolicyOrderKey = null);
+public sealed record DeckEntry(string Id, int Copies, EffectPlan? Effect = null, string? PolicyOrderKey = null) {
+    /// <summary>Optional ordinal identity shared by entries that match the same random-discard reveal.
+    /// Required on reveal sources. An ordinary entry may carry the same key without acquiring an effect.</summary>
+    public string? RevealIdentity { get; init; }
+}
 
 /// <summary>A resolved predicate, including the explicitly empty set. No metadata is interpreted.</summary>
 public sealed class Membership {
@@ -173,9 +177,9 @@ public sealed class SearchOperation {
 /// The kept effect never activates, and creates no new search opportunity.</remarks>
 public sealed record ExcavationOperation(int Count, bool RequiresNoPriorEffectDraw = false);
 
-/// <summary>Closed instruction set: draw, or search one, or excavate and keep one. No execution callbacks.</summary>
-/// <param name="DrawCount">Positive draw batch size, or null when choosing Search or Excavation.</param>
-/// <param name="ActivationLimit">Positive entry-wide allowance shared by its physical copies; null removes the cap, but each activation still consumes a source. Excavation requires 1.</param>
+/// <summary>Closed instruction set for draws, random-discard reveals, searches and excavations. No execution callbacks.</summary>
+/// <param name="DrawCount">Positive draw batch size, or null for any other operation.</param>
+/// <param name="ActivationLimit">Positive entry-wide allowance shared by its physical copies; null removes the cap. Random-discard reveals require null and excavation requires 1.</param>
 /// <param name="HandCost">Nonnegative number of eligible other held copies removed before a draw/search activation.</param>
 /// <param name="HandCostEligibility">Null or Eligibility.Any accepts any other copy. A membership filter requires positive HandCost.</param>
 /// <param name="HiddenDeckCost">Nonnegative hidden top-deck removal before drawing; draw only.</param>
@@ -191,9 +195,9 @@ public sealed record ExcavationOperation(int Count, bool RequiresNoPriorEffectDr
 /// Set exactly one operation; use a null DeckEntry.Effect for no operation. Draws may combine all draw fields,
 /// hand costs, removals and MinimumHandSize. Searches allow hand costs, removals, MinimumHandSize and entry/mode
 /// allowances, but no hidden deck costs or draw sequencing flags. Excavation requires ActivationLimit = 1,
-/// zero costs/removals/MinimumHandSize and false draw flags. Counts must be nonnegative; supplied draw counts
+/// zero costs/removals/MinimumHandSize and false draw flags. Random-discard reveals require those same zero fields and an unlimited allowance. Counts must be nonnegative; supplied draw counts
 /// and activation limits must be positive. Every filter reference is validated, even in OpeningHand mode.
-/// Legal automatic draws consume the source, pay costs, draw the entire batch, mill, then remove held copies.
+/// Legal fixed-size draws consume the source, pay costs, draw the entire batch, mill, then remove held copies.
 /// Costs cannot use the activating source. The complete deck cost, draw and mill must fit before activation;
 /// an unavailable source stays held without spending its allowance. Newly drawn effects may activate.
 /// Resolution order is draws, at most one excavation, then optional searches. Searched/excavated effects do
@@ -214,4 +218,9 @@ public sealed record EffectPlan(
     int MinimumHandSize = 0,
     SearchOperation? Search = null,
     ExcavationOperation? Excavation = null
-);
+) {
+    /// <summary>Reveal the source and discard one uniformly random held physical copy, including the source.
+    /// On matching RevealIdentity only the discard leaves. On a mismatch also consume the source and draw one.
+    /// This standalone operation requires ActivationLimit = null and one available deck copy before activation.</summary>
+    public bool RandomDiscardReveal { get; init; }
+}

@@ -51,10 +51,12 @@ internal sealed partial class PostDrawCalculation {
     ) {
         _searchCertificate = null;
         _streamedSearch = null;
+        bool hasReveal = deck.Any(card => card.Copies > 0 && card.IsRandomDiscardReveal);
+        physical |= hasReveal;
         List<Card> cards = ReduceSearchDeck(combos, out Dictionary<string, List<Card>> identities, merge: !physical && coalesceOrdinary);
         // Only removable searchers need policy target counts. Unrelated targets
         // can still join the deferred pool when no removal can observe them.
-        bool compactPhysical = physical && method == PhysicalEnumerationMethod.Auto && deferIdentities
+        bool compactPhysical = !hasReveal && physical && method == PhysicalEnumerationMethod.Auto && deferIdentities
             && cards.All(card => !card.EffectPlan.RequiresSearchResolution && card.Excavation is null);
         // The same whole-trace exchangeability proof applies to optimistic and
         // lower counting: expand original source identities only in the final
@@ -160,10 +162,12 @@ internal sealed partial class PostDrawCalculation {
         int count = cards.Count;
         CheckStorage(count, 3L * count, "physical row partition");
         bool[] joinsPrevious = new bool[count];
+        bool hasReveal = cards.Any(card => card.Copies > 0 && card.IsRandomDiscardReveal);
 
         for (int row = 1; row < count; row++) {
             budget.Spend(1);
             joinsPrevious[row] = Ordinary(cards[row - 1]) && Ordinary(cards[row])
+                && (!hasReveal || cards[row - 1].RevealIdentity == cards[row].RevealIdentity)
                 && string.Equals(cards[row - 1].PolicyOrderKey, cards[row].PolicyOrderKey, StringComparison.Ordinal);
         }
 
@@ -258,7 +262,7 @@ internal sealed partial class PostDrawCalculation {
         // target capacity is its actual survivor count. No survivor identity is inferred.
         return reduced;
 
-        static bool Ordinary(Card card) => card.Active && card.Copies > 0 && card.DrawCount is null && card.Search is null && card.Excavation is null;
+        static bool Ordinary(Card card) => card.Active && card.Copies > 0 && !card.HasDrawEffect && card.Search is null && card.Excavation is null;
 
         void Include(CardSelector selector) {
             CheckStorage(count, 3L * count + selector.EvaluationSize, "physical row partition");
@@ -296,7 +300,7 @@ internal sealed partial class PostDrawCalculation {
             // Combining interleaved IDs across different filters changes removals.
             string? previousEligibility = null;
 
-            foreach ((Card card, string _, string eligibility) in group.Where(entry => entry.Card.DrawCount is null)
+            foreach ((Card card, string _, string eligibility) in group.Where(entry => !entry.Card.HasDrawEffect)
                 .OrderBy(entry => entry.Card.Id, StringComparer.Ordinal)) {
 
                 if (merge && card.Search is null && card.Excavation is null && reduced.Count > 0
@@ -312,7 +316,7 @@ internal sealed partial class PostDrawCalculation {
             }
 
             // Effect entries stay separate, preserving OPT identity AND custom rank.
-            foreach (Card card in group.Where(entry => entry.Card.DrawCount is not null).Select(entry => entry.Card)
+            foreach (Card card in group.Where(entry => entry.Card.HasDrawEffect).Select(entry => entry.Card)
                 .OrderBy(card => card.Id, StringComparer.Ordinal)) {
                 reduced.Add(card);
                 identities.Add(card.Id, [card]);
